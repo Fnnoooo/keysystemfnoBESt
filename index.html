@@ -163,8 +163,8 @@
 
         function generateKey() {
             const date = new Date();
-            // JS getUTCMonth is 0-indexed. This matches Lua's logic which we set to month - 1.
-            const dateStr = `${date.getUTCFullYear()}-${date.getUTCMonth()}-${date.getUTCDate()}`;
+            // Strict UTC Date matching the Lua script's month-1 format (Jan = 0)
+            const dateStr = date.getUTCFullYear() + "-" + date.getUTCMonth() + "-" + date.getUTCDate();
             
             let hash = 0;
             const str = currentHwid + dateStr + "UniSecret123";
