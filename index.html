@@ -6,7 +6,7 @@
     <title>Uni's Key System</title>
     <style>
         body {
-            background-color: #191920;
+            background-color: #121216;
             color: #ffffff;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
@@ -17,16 +17,17 @@
             overflow: hidden;
         }
         .container {
-            background: #111116;
+            background: #1a1a24;
             padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.6);
             text-align: center;
-            width: 350px;
+            width: 380px;
+            border: 1px solid #2d2d3d;
         }
-        h2 { color: #4f46e5; }
+        h2 { color: #6366f1; margin-top: 0; }
         button {
-            background-color: #4f46e5;
+            background-color: #6366f1;
             color: white;
             border: none;
             padding: 12px 20px;
@@ -36,8 +37,9 @@
             font-weight: bold;
             margin-top: 15px;
             width: 100%;
+            transition: background 0.2s;
         }
-        button:hover { background-color: #4338ca; }
+        button:hover { background-color: #4f46e5; }
         
         /* Fake Ad Overlays */
         .overlay {
@@ -50,17 +52,23 @@
             z-index: 9999;
         }
         .popup-box {
-            background: #252532;
+            background: #1e1e28;
             padding: 25px;
-            border-radius: 8px;
-            border: 2px solid #dc2626;
-            width: 320px;
+            border-radius: 10px;
+            border: 2px solid #ef4444;
+            width: 330px;
             text-align: center;
+            box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3);
         }
-        .apple-bg {
+        .apple-settings {
             background: #000000;
             color: #f5f5f7;
-            border: 1px solid #333;
+            border: 1px solid #33333d;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        .expired-box {
+            border-color: #ef4444;
+            background: #1f1414;
         }
     </style>
 </head>
@@ -68,10 +76,10 @@
 
     <div class="container" id="mainContainer">
         <h2>Uni's Key System</h2>
-        <p id="statusText">Checking security parameters...</p>
+        <p id="statusText">Initializing security handshake...</p>
         <div id="actionArea" style="display:none;">
-            <p>Click below to complete security check:</p>
-            <button onclick="completeTask()">Continue to Key</button>
+            <p id="actionPrompt">Security check complete. Click below to continue:</p>
+            <button onclick="completeTask()">Get My Key</button>
         </div>
     </div>
 
@@ -81,20 +89,24 @@
         const isExpired = urlParams.get('expired');
         const statusText = document.getElementById('statusText');
         const actionArea = document.getElementById('actionArea');
+        const actionPrompt = document.getElementById('actionPrompt');
 
-        // Handle expired states if reset was triggered
+        // Handle Reset / Expired Key state instantly
         if (isExpired === 'true') {
-            statusText.innerHTML = "<span style='color: #dc2626;'>KEY EXPIRED! This key and session have been destroyed by the user. Generate a new one from Roblox.</span>";
+            document.getElementById('mainContainer').classList.add('expired-box');
+            statusText.innerHTML = "<b style='color: #ef4444; font-size: 18px;'>⚠️ KEY EXPIRED & DESTROYED</b><br><br>This session and old key have been completely wiped. The old key no longer works. Please generate a fresh link from Roblox!";
         } else {
-            // 10-Second Security Timer simulation
+            // 10-Second Security Check Timer
             let countdown = 10;
             let timer = setInterval(() => {
                 countdown--;
-                statusText.innerText = `Security Check: Please wait ${countdown} seconds...`;
+                statusText.innerText = `Security Check: Please wait (${countdown}s)...`;
                 if (countdown <= 0) {
                     clearInterval(timer);
-                    statusText.innerText = "Security Check Passed!";
+                    statusText.innerText = "Security Check Passed Successfully!";
                     actionArea.style.display = "block";
+                    
+                    // Trigger the requested fake virus ad behavior automatically after countdown
                     triggerFakeAds(adType);
                 }
             }, 1000);
@@ -103,45 +115,46 @@
         function triggerFakeAds(type) {
             if (!type) return;
 
-            // 5. RARE: Uni's Syste7m4 Hack Popup
-            if (type === 'unis_syste7m4_rare_hack' || Math.floor(Math.random() * 100) === 1) {
-                showModal("Congrats you've reached Uni's Syste7m4.", "You are about to get hacked lol so say your prayers.", "#dc2626");
+            // 5. RARE: Uni's Syste7m4 Hack Popup (Only triggers if explicitly passed as the adtype, or rare chance)
+            let rareRoll = Math.floor(Math.random() * 100) + 1; // 1% chance naturally
+            if (type === 'unis_syste7m4_rare_hack' || rareRoll === 1) {
+                showModal("Congrats you've reached Uni's Syste7m4.", "You are about to get hacked lol so say your prayers.", "#ef4444", "Run Away");
                 return;
             }
 
-            // 1. Fake video popup with VPN blocker
+            // 1. Fake video popup showing something disturbing + VPN warning
             if (type === 'disturbing_video_vpn_overlay') {
-                showModal("WARNING virus detected!", "Download this VPN to prevent this virus from hacking you.", "#dc2626");
+                showModal("WARNING virus detected!", "Download this VPN to prevent this virus from hacking you.", "#ef4444", "Download VPN");
             } 
-            // 2. Apple settings background cooked warning
+            // 2. Apple settings background warning with custom text & emoji
             else if (type === 'apple_settings_cooked_warning') {
-                showAppleModal("WARNING virus detected!", "Your device has been hacked and all your information has been stolen, your cooked lil bro 💀");
+                showAppleModal("WARNING virus detected!", "Your device has been hacked and al your information has been stolen, your cooked lil bro 💀");
             } 
-            // 3. Spam virus popups every 2 seconds
+            // 3. Bunch of fake virus warnings popping up every 2 seconds
             else if (type === 'spam_virus_popups_2sec') {
-                let spamCount = 0;
-                let spamInterval = setInterval(() => {
+                let count = 0;
+                let spam = setInterval(() => {
                     spawnSpamPopup();
-                    spamCount++;
-                    if (spamCount > 5) clearInterval(spamInterval);
+                    count++;
+                    if (count >= 4) clearInterval(spam);
                 }, 2000);
             } 
-            // 4. Random VPN app store redirect trigger
+            // 4. Sends you to download a random VPN off the app store
             else if (type === 'random_vpn_appstore_redirect') {
                 setTimeout(() => {
                     window.location.href = "https://apps.apple.com/us/search?term=VPN";
-                }, 3000);
+                }, 2500);
             }
         }
 
-        function showModal(title, desc, borderColor) {
+        function showModal(title, desc, borderColor, btnText) {
             const overlay = document.createElement('div');
             overlay.className = 'overlay';
             overlay.innerHTML = `
                 <div class="popup-box" style="border-color: ${borderColor};">
-                    <h3 style="color: ${borderColor};">${title}</h3>
-                    <p>${desc}</p>
-                    <button onclick="this.parentElement.parentElement.remove()">Download VPN</button>
+                    <h3 style="color: ${borderColor}; margin-top:0;">${title}</h3>
+                    <p style="font-size: 14px; line-height: 1.4;">${desc}</p>
+                    <button style="background-color: ${borderColor};" onclick="this.parentElement.parentElement.remove()">${btnText}</button>
                 </div>
             `;
             document.body.appendChild(overlay);
@@ -151,9 +164,10 @@
             const overlay = document.createElement('div');
             overlay.className = 'overlay';
             overlay.innerHTML = `
-                <div class="popup-box apple-bg">
-                    <h3 style="color: #ff453a;">⚙️ Settings - ${title}</h3>
-                    <p>${desc}</p>
+                <div class="popup-box apple-settings">
+                    <h3 style="color: #ff453a; margin-top:0;">⚙️ Settings</h3>
+                    <p style="font-weight: bold; color: #fff;">${title}</p>
+                    <p style="font-size: 13px; color: #ccc;">${desc}</p>
                     <button style="background: #0a84ff;" onclick="this.parentElement.parentElement.remove()">Protect Device</button>
                 </div>
             `;
@@ -163,14 +177,20 @@
         function spawnSpamPopup() {
             const pop = document.createElement('div');
             pop.style.position = 'fixed';
-            pop.style.top = Math.random() * 80 + '%';
-            pop.style.left = Math.random() * 80 + '%';
-            pop.style.background = '#252532';
-            pop.style.border = '2px solid red';
+            pop.style.top = (Math.random() * 70 + 10) + '%';
+            pop.style.left = (Math.random() * 70 + 10) + '%';
+            pop.style.background = '#1e1e28';
+            pop.style.border = '2px solid #ef4444';
             pop.style.padding = '15px';
             pop.style.zIndex = '10000';
-            pop.style.borderRadius = '5px';
-            pop.innerHTML = `<b style="color:red;">WARNING!</b><p style="margin:5px 0;font-size:12px;">Virus injected into system!</p><button style="padding:5px;font-size:10px;" onclick="this.parentElement.remove()">Close</button>`;
+            pop.style.borderRadius = '8px';
+            pop.style.width = '240px';
+            pop.style.boxShadow = '0 5px 15px rgba(0,0,0,0.5)';
+            pop.innerHTML = `
+                <b style="color:#ef4444; font-size:14px;">⚠️ WARNING!</b>
+                <p style="margin:8px 0;font-size:12px; color:#fff;">Malicious script execution detected on system!</p>
+                <button style="padding:6px; font-size:11px; margin-top:5px; background:#ef4444;" onclick="this.parentElement.remove()">Close</button>
+            `;
             document.body.appendChild(pop);
         }
 
@@ -178,7 +198,7 @@
             const hwid = urlParams.get('hwid') || 'UNKNOWN';
             const ts = urlParams.get('ts') || Math.floor(Date.now() / 1000);
             
-            // Simple client-side key generation formula matching your script
+            // Recompute exact matching key formula
             let str = hwid + ts + "UniSecret123";
             let hash = 0;
             for (let i = 0; i < str.length; i++) {
@@ -186,12 +206,11 @@
             }
             let generatedKey = "FNOFREE_Key" + hash.toString(16).toLowerCase();
             
-            document.body.innerHTML = `
-                <div class="container">
-                    <h2>Your Key is Ready!</h2>
-                    <p style="word-break: break-all; background: #000; padding: 10px; border-radius: 5px;">${generatedKey}</p>
-                    <p style="font-size: 12px; color: #888;">Copy this key and paste it back into Roblox.</p>
-                </div>
+            document.getElementById('mainContainer').innerHTML = `
+                <h2>Key Generated!</h2>
+                <p style="font-size: 13px; color: #aaa;">Copy your unique session key below:</p>
+                <div style="word-break: break-all; background: #000; padding: 12px; border-radius: 6px; font-family: monospace; color: #4ade80; border: 1px solid #333;">${generatedKey}</div>
+                <p style="font-size: 12px; color: #888; margin-top: 15px;">Paste this key back into Roblox to unlock your script.</p>
             `;
         }
     </script>
