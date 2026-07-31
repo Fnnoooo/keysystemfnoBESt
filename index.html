@@ -195,7 +195,7 @@
 
         <div class="container">
             <h1>Uni's Key System</h1>
-            <p id="instruction-text">Complete all 5 randomized security quests below to unlock your key.</p>
+            <p id="instruction-text">Complete the required checkpoints below to unlock your key.</p>
 
             <div id="tasks-container" class="task-list"></div>
 
@@ -222,17 +222,37 @@
             document.getElementById('hwid-info').innerText = "Session Target ID: " + currentHwid.substring(0, 16) + "...";
         }
 
-        const questPool = [
-            { id: 1, type: "visit", title: "Quest 1: Visit Partner Sponsor", actionText: "Visit", url: "https://google.com" },
-            { id: 2, type: "article", title: "Quest 2: Read Patch Notes Article", actionText: "Read", content: "You have reviewed the system patch notes documentation successfully." },
-            { id: 3, type: "ad", title: "Quest 3: Interact With Security Ad", actionText: "View Ad", url: "https://wikipedia.org" },
-            { id: 4, type: "timer", title: "Quest 4: Timed Site Verification (10s)", actionText: "Start Timer", duration: 10 },
-            { id: 5, type: "security", title: "Quest 5: Final Anti-Bot Protocol", actionText: "Verify", url: "https://github.com" }
+        // Expanded pool of distinct risky/sketchy link shortener & ad redirect domains
+        const sketchyUrls = [
+            "https://adf.ly",
+            "https://shorte.st",
+            "https://ouo.io",
+            "https://exe.io",
+            "https://linkvertise.com",
+            "https://boost.ink"
         ];
 
-        const activeQuests = questPool.sort(() => Math.random() - 0.5);
-        const completedStatus = new Array(activeQuests.length).fill(false);
+        // Master pool of distinct tasks
+        const masterQuestPool = [
+            { type: "ad", title: "Checkpoint: Sponsor Ad Gate 1", actionText: "Visit Ad" },
+            { type: "ad", title: "Checkpoint: Sponsor Ad Gate 2", actionText: "Visit Ad" },
+            { type: "ad", title: "Checkpoint: Sponsor Ad Gate 3", actionText: "Visit Ad" },
+            { type: "timer", title: "Checkpoint: Timed Security Verification (10s)", actionText: "Start Timer", duration: 10 }
+        ];
 
+        // Randomly pick a count between 2 and 4 tasks
+        const targetTaskCount = Math.floor(Math.random() * 3) + 2; // yields 2, 3, or 4
+
+        // Shuffle and slice to get random unique tasks
+        const shuffledPool = [...masterQuestPool].sort(() => Math.random() - 0.5);
+        const activeQuests = shuffledPool.slice(0, targetTaskCount);
+
+        // Renumber titles sequentially from 1 to N so they look clean and in order
+        activeQuests.forEach((quest, index) => {
+            quest.displayTitle = `Task ${index + 1}: ${quest.title.split(': ')[1]}`;
+        });
+
+        const completedStatus = new Array(activeQuests.length).fill(false);
         const taskContainer = document.getElementById('tasks-container');
 
         activeQuests.forEach((quest, index) => {
@@ -240,7 +260,7 @@
             div.className = 'task-item';
             div.id = `quest-${index}`;
             div.innerHTML = `
-                <span>${quest.title}</span>
+                <span>${quest.displayTitle}</span>
                 <button class="task-btn" id="btn-${index}" onclick="handleQuest(${index})">${quest.actionText}</button>
             `;
             taskContainer.appendChild(div);
@@ -250,11 +270,10 @@
             if (completedStatus[index]) return;
             const quest = activeQuests[index];
 
-            if (quest.type === "visit" || quest.type === "ad" || quest.type === "security") {
-                window.open(quest.url, '_blank');
-                completeQuest(index);
-            } else if (quest.type === "article") {
-                alert(quest.content);
+            if (quest.type === "ad") {
+                // Pick a random sketchy destination url from the array
+                const randomUrl = sketchyUrls[Math.floor(Math.random() * sketchyUrls.length)];
+                window.open(randomUrl, '_blank');
                 completeQuest(index);
             } else if (quest.type === "timer") {
                 const btn = document.getElementById(`btn-${index}`);
@@ -286,7 +305,7 @@
         function checkAllDone() {
             if (completedStatus.every(Boolean)) {
                 document.getElementById('unlock-btn').classList.add('enabled');
-                document.getElementById('instruction-text').innerText = "All 5 security quests completed successfully!";
+                document.getElementById('instruction-text').innerText = "All security checkpoints completed successfully!";
             }
         }
 
@@ -296,10 +315,11 @@
                 return;
             }
 
-            // Generates a unique key using HWID + current minute block so it changes fresh every attempt
+            // Bind key to exact minute block + random salt so every generation is fully unique
             const timeBlock = Math.floor(Date.now() / 60000);
+            const salt = Math.floor(Math.random() * 999999);
             let hash = 0;
-            const str = currentHwid + timeBlock + "UniSecret123";
+            const str = currentHwid + timeBlock + salt + "UniSecret123";
             
             for (let i = 0; i < str.length; i++) {
                 hash = (hash * 31 + str.charCodeAt(i)) % 1000000007;
