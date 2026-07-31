@@ -39,7 +39,6 @@
             gap: 15px;
         }
 
-        /* Risky/Spooky Ad Banners */
         .ad-banner {
             width: 100%;
             background: linear-gradient(90deg, #3f1d1d, #2d1212);
@@ -218,13 +217,12 @@
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const currentHwid = urlParams.get('hwid') || "UNKNOWN";
-        const sessionToken = urlParams.get('token') || Math.random();
+        const sessionToken = urlParams.get('token') || "DEFAULT_TOKEN";
 
         if (currentHwid !== "UNKNOWN") {
             document.getElementById('hwid-info').innerText = "Session Target ID: " + currentHwid.substring(0, 16) + "...";
         }
 
-        // 5 Main Quests definition
         const questPool = [
             { id: 1, type: "visit", title: "Quest 1: Visit Partner Sponsor", actionText: "Visit", url: "https://google.com" },
             { id: 2, type: "article", title: "Quest 2: Read Patch Notes Article", actionText: "Read", content: "You have reviewed the system patch notes documentation successfully." },
@@ -233,7 +231,6 @@
             { id: 5, type: "security", title: "Quest 5: Final Anti-Bot Protocol", actionText: "Verify", url: "https://github.com" }
         ];
 
-        // Shuffle and pick all 5 quests to make sure they are fully randomized in order
         const activeQuests = questPool.sort(() => Math.random() - 0.5);
         const completedStatus = new Array(activeQuests.length).fill(false);
 
@@ -303,7 +300,7 @@
             const date = new Date();
             const dateStr = date.getUTCFullYear() + "-" + date.getUTCMonth() + "-" + date.getUTCDate();
             
-            // Combine session token so every reset creates a brand new unique target hash
+            // Matches Roblox validation calculation formula including session token
             let hash = 0;
             const str = currentHwid + dateStr + sessionToken + "UniSecret123";
             
