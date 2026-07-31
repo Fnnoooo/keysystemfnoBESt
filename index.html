@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uni's Key System - Gateway</title>
+    <title>Uni's Key System - Secure Gateway</title>
     <style>
         * {
             box-sizing: border-box;
@@ -13,7 +13,7 @@
         }
 
         body {
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            background: linear-gradient(135deg, #0b0919, #1e1b4b, #0f172a);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
             color: #ffffff;
@@ -21,7 +21,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: 15px;
         }
 
         @keyframes gradientBG {
@@ -35,77 +35,80 @@
             flex-direction: column;
             align-items: center;
             width: 100%;
-            max-width: 480px;
-            gap: 20px;
+            max-width: 500px;
+            gap: 15px;
         }
 
-        /* Responsive Ad Banners */
+        /* Risky/Spooky Ad Banners */
         .ad-banner {
             width: 100%;
-            background-color: rgba(26, 26, 34, 0.85);
-            border: 1px dashed #4a4a5e;
+            background: linear-gradient(90deg, #3f1d1d, #2d1212);
+            border: 1px solid #ef4444;
             border-radius: 8px;
-            padding: 15px;
+            padding: 12px;
             text-align: center;
-            color: #7a7a8c;
-            font-size: 12px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            color: #fca5a5;
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
         }
 
         .container {
-            background-color: rgba(22, 22, 30, 0.92);
-            backdrop-filter: blur(10px);
-            padding: 30px;
+            background-color: rgba(18, 18, 26, 0.95);
+            backdrop-filter: blur(12px);
+            padding: 25px;
             border-radius: 12px;
-            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
             text-align: center;
             width: 100%;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.2);
         }
 
         h1 {
-            font-size: 22px;
-            margin-bottom: 8px;
+            font-size: 20px;
+            margin-bottom: 5px;
             color: #fff;
         }
 
         p {
-            color: #a0a0ab;
-            font-size: 13px;
-            margin-bottom: 20px;
+            color: #94a3b8;
+            font-size: 12px;
+            margin-bottom: 15px;
         }
 
         .task-list {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
             margin-bottom: 20px;
             text-align: left;
+            max-height: 260px;
+            overflow-y: auto;
         }
 
         .task-item {
-            background-color: rgba(35, 35, 45, 0.9);
-            padding: 12px 15px;
+            background-color: rgba(30, 30, 42, 0.9);
+            padding: 10px 12px;
             border-radius: 6px;
-            border: 1px solid #2d2d3b;
+            border: 1px solid #334155;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 13px;
+            font-size: 12px;
         }
 
         .task-item.completed {
-            border-color: #3ba55d;
-            color: #3ba55d;
+            border-color: #22c55e;
+            color: #22c55e;
         }
 
         .task-btn {
-            background-color: #5865F2;
+            background-color: #4f46e5;
             color: white;
             border: none;
-            padding: 6px 12px;
-            font-size: 12px;
+            padding: 5px 10px;
+            font-size: 11px;
             border-radius: 4px;
             cursor: pointer;
             font-weight: bold;
@@ -113,26 +116,26 @@
         }
 
         .task-btn:hover {
-            background-color: #4752C4;
+            background-color: #4338ca;
         }
 
         .task-item.completed .task-btn {
-            background-color: #3ba55d;
+            background-color: #22c55e;
             cursor: default;
         }
 
         .btn {
-            background-color: #5865F2;
+            background-color: #4f46e5;
             color: white;
             border: none;
             padding: 12px 20px;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: bold;
             border-radius: 6px;
             cursor: pointer;
             width: 100%;
             transition: background 0.2s;
-            opacity: 0.5;
+            opacity: 0.4;
             pointer-events: none;
         }
 
@@ -142,7 +145,7 @@
         }
 
         .btn:hover.enabled {
-            background-color: #4752C4;
+            background-color: #4338ca;
         }
 
         .hidden {
@@ -155,31 +158,31 @@
 
         input[type="text"] {
             width: 100%;
-            padding: 12px;
-            background-color: #16161c;
-            border: 1px solid #3a3a48;
+            padding: 10px;
+            background-color: #0f172a;
+            border: 1px solid #334155;
             border-radius: 6px;
             color: #fff;
-            font-size: 14px;
+            font-size: 13px;
             text-align: center;
             outline: none;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .copy-btn {
-            background-color: #3ba55d;
+            background-color: #22c55e;
             opacity: 1;
             pointer-events: auto;
         }
 
         .copy-btn:hover {
-            background-color: #2d8046;
+            background-color: #16a34a;
         }
 
         .hwid-display {
-            font-size: 10px;
-            color: #555;
-            margin-top: 15px;
+            font-size: 9px;
+            color: #475569;
+            margin-top: 12px;
             word-break: break-all;
         }
     </style>
@@ -187,103 +190,122 @@
 <body>
 
     <div class="main-wrapper">
-        <!-- Top Responsive Ad -->
         <div class="ad-banner">
-            Advertisement (Sponsored)
+            ⚠️ WARNING: Critical System Driver Update Available! Click to Scan Device!
         </div>
 
         <div class="container">
             <h1>Uni's Key System</h1>
-            <p id="instruction-text">Complete the required tasks below to unlock your key.</p>
+            <p id="instruction-text">Complete all 5 randomized security quests below to unlock your key.</p>
 
-            <!-- Dynamic Task Container -->
-            <div id="tasks-container" class="task-list">
-                <!-- Populated dynamically via JavaScript -->
-            </div>
+            <div id="tasks-container" class="task-list"></div>
 
-            <!-- Unlock Button (Triggers Key Generation) -->
             <button id="unlock-btn" class="btn" onclick="generateKey()">Generate Key</button>
 
-            <!-- Key Output Container (Hidden initially) -->
             <div id="key-container" class="key-box-container hidden">
                 <input type="text" id="generated-key" readonly>
-                <button class="btn copy-btn" onclick="copyKey()">Copy Key</button>
+                <button class="btn copy-btn" onclick="copyKey()">Click to Copy Key</button>
             </div>
 
             <div id="hwid-info" class="hwid-display"></div>
         </div>
 
-        <!-- Bottom Responsive Ad -->
         <div class="ad-banner">
-            Advertisement (Sponsored)
+            🔥 SPONSORED: Play This New 3D MMORPG Without Downloading! Instant Access!
         </div>
     </div>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const currentHwid = urlParams.get('hwid') || "UNKNOWN";
+        const sessionToken = urlParams.get('token') || Math.random();
 
         if (currentHwid !== "UNKNOWN") {
-            document.getElementById('hwid-info').innerText = "HWID Token: " + currentHwid;
+            document.getElementById('hwid-info').innerText = "Session Target ID: " + currentHwid.substring(0, 16) + "...";
         }
 
-        // Randomize task count between 2, 3, or 4
-        const allPossibleTasks = [
-            { name: "Complete Step 1: Linkvertise Checkpoint", url: "https://linkvertise.com" },
-            { name: "Complete Step 2: Sponsor Destination", url: "https://google.com" },
-            { name: "Complete Step 3: Social Verification", url: "https://discord.com" },
-            { name: "Complete Step 4: Final Security Check", url: "https://github.com" }
+        // 5 Main Quests definition
+        const questPool = [
+            { id: 1, type: "visit", title: "Quest 1: Visit Partner Sponsor", actionText: "Visit", url: "https://google.com" },
+            { id: 2, type: "article", title: "Quest 2: Read Patch Notes Article", actionText: "Read", content: "You have reviewed the system patch notes documentation successfully." },
+            { id: 3, type: "ad", title: "Quest 3: Interact With Security Ad", actionText: "View Ad", url: "https://wikipedia.org" },
+            { id: 4, type: "timer", title: "Quest 4: Timed Site Verification (10s)", actionText: "Start Timer", duration: 10 },
+            { id: 5, type: "security", title: "Quest 5: Final Anti-Bot Protocol", actionText: "Verify", url: "https://github.com" }
         ];
 
-        // Randomly slice 2 to 4 tasks
-        const taskCount = Math.floor(Math.random() * 3) + 2; 
-        const activeTasks = allPossibleTasks.slice(0, taskCount);
-        const completedTasksStatus = new Array(activeTasks.length).fill(false);
+        // Shuffle and pick all 5 quests to make sure they are fully randomized in order
+        const activeQuests = questPool.sort(() => Math.random() - 0.5);
+        const completedStatus = new Array(activeQuests.length).fill(false);
 
         const taskContainer = document.getElementById('tasks-container');
 
-        activeTasks.forEach((task, index) => {
-            const taskDiv = document.createElement('div');
-            taskDiv.className = 'task-item';
-            taskDiv.id = `task-${index}`;
-            taskDiv.innerHTML = `
-                <span>Task ${index + 1} of ${activeTasks.length}</span>
-                <button class="task-btn" onclick="openTask(${index}, '${task.url}')">Visit</button>
+        activeQuests.forEach((quest, index) => {
+            const div = document.createElement('div');
+            div.className = 'task-item';
+            div.id = `quest-${index}`;
+            div.innerHTML = `
+                <span>${quest.title}</span>
+                <button class="task-btn" id="btn-${index}" onclick="handleQuest(${index})">${quest.actionText}</button>
             `;
-            taskContainer.appendChild(taskDiv);
+            taskContainer.appendChild(div);
         });
 
-        function openTask(index, url) {
-            window.open(url, '_blank');
-            completedTasksStatus[index] = true;
-            
-            const taskElem = document.getElementById(`task-${index}`);
-            taskElem.classList.add('completed');
-            taskElem.querySelector('.task-btn').innerText = "Completed";
+        function handleQuest(index) {
+            if (completedStatus[index]) return;
+            const quest = activeQuests[index];
 
-            checkAllTasksDone();
+            if (quest.type === "visit" || quest.type === "ad" || quest.type === "security") {
+                window.open(quest.url, '_blank');
+                completeQuest(index);
+            } else if (quest.type === "article") {
+                alert(quest.content);
+                completeQuest(index);
+            } else if (quest.type === "timer") {
+                const btn = document.getElementById(`btn-${index}`);
+                btn.disabled = true;
+                let timeLeft = quest.duration;
+                btn.innerText = `${timeLeft}s remaining...`;
+                
+                const timerInterval = setInterval(() => {
+                    timeLeft--;
+                    if (timeLeft > 0) {
+                        btn.innerText = `${timeLeft}s remaining...`;
+                    } else {
+                        clearInterval(timerInterval);
+                        completeQuest(index);
+                    }
+                }, 1000);
+            }
         }
 
-        function checkAllTasksDone() {
-            const allDone = completedTasksStatus.every(status => status === true);
-            if (allDone) {
-                const unlockBtn = document.getElementById('unlock-btn');
-                unlockBtn.classList.add('enabled');
-                document.getElementById('instruction-text').innerText = "All tasks completed! You can now generate your key.";
+        function completeQuest(index) {
+            completedStatus[index] = true;
+            const item = document.getElementById(`quest-${index}`);
+            item.classList.add('completed');
+            item.querySelector('.task-btn').innerText = "Done ✓";
+            
+            checkAllDone();
+        }
+
+        function checkAllDone() {
+            if (completedStatus.every(Boolean)) {
+                document.getElementById('unlock-btn').classList.add('enabled');
+                document.getElementById('instruction-text').innerText = "All 5 security quests completed successfully!";
             }
         }
 
         function generateKey() {
             if (currentHwid === "UNKNOWN") {
-                alert("Error: No HWID detected! Please open the link through your Roblox script.");
+                alert("Error: Invalid session context token.");
                 return;
             }
 
             const date = new Date();
             const dateStr = date.getUTCFullYear() + "-" + date.getUTCMonth() + "-" + date.getUTCDate();
             
+            // Combine session token so every reset creates a brand new unique target hash
             let hash = 0;
-            const str = currentHwid + dateStr + "UniSecret123";
+            const str = currentHwid + dateStr + sessionToken + "UniSecret123";
             
             for (let i = 0; i < str.length; i++) {
                 hash = (hash * 31 + str.charCodeAt(i)) % 1000000007;
@@ -298,16 +320,13 @@
         }
 
         function copyKey() {
-            const keyInput = document.getElementById('generated-key');
-            keyInput.select();
-            keyInput.setSelectionRange(0, 99999);
-            navigator.clipboard.writeText(keyInput.value);
+            const input = document.getElementById('generated-key');
+            input.select();
+            navigator.clipboard.writeText(input.value);
             
-            const copyBtn = document.querySelector('.copy-btn');
-            copyBtn.innerText = "Copied!";
-            setTimeout(() => {
-                copyBtn.innerText = "Copy Key";
-            }, 2000);
+            const btn = document.querySelector('.copy-btn');
+            btn.innerText = "Key Copied!";
+            setTimeout(() => { btn.innerText = "Click to Copy Key"; }, 2000);
         }
     </script>
 </body>
