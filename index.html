@@ -4,111 +4,167 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Uni's Key System</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #0d1117; color: #c9d1d9; font-family: Inter, sans-serif; }
-        .bg-panel { background-color: #161b22; }
-        .border-panel { border: 1px solid #30363d; }
-        .loader { border: 3px solid #30363d; border-top: 3px solid #58a6ff; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #121216;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            background-color: #1a1a22;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            width: 100%;
+            max-width: 420px;
+            border: 1px solid #2a2a35;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        p {
+            color: #a0a0ab;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            background-color: #5865F2;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+            margin-bottom: 15px;
+        }
+
+        .btn:hover {
+            background-color: #4752C4;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .key-box-container {
+            margin-top: 20px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            background-color: #252530;
+            border: 1px solid #3a3a48;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 14px;
+            text-align: center;
+            outline: none;
+            margin-bottom: 10px;
+        }
+
+        .copy-btn {
+            background-color: #3ba55d;
+        }
+
+        .copy-btn:hover {
+            background-color: #2d8046;
+        }
+
+        .hwid-display {
+            font-size: 11px;
+            color: #666;
+            margin-top: 20px;
+            word-break: break-all;
+        }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
+<body>
 
-    <div class="w-full max-w-md bg-panel border-panel rounded-xl shadow-2xl p-6 sm:p-8 relative">
-        <h2 class="text-2xl font-bold text-white mb-6 text-center">Uni's Key System</h2>
-        
-        <div id="error-overlay" class="absolute inset-0 bg-panel z-10 rounded-xl hidden flex-col items-center justify-center p-6 text-center">
-            <h2 class="text-xl font-bold text-red-500 mb-2">Invalid Session</h2>
-            <p class="text-gray-400 text-sm">Please open this link from the Roblox script.</p>
+    <div class="container">
+        <h1>Uni's Key System</h1>
+        <p>Click below to generate your daily access key.</p>
+
+        <!-- Unlock Button (Triggers Key Generation) -->
+        <button id="unlock-btn" class="btn" onclick="generateKey()">Generate Key</button>
+
+        <!-- Key Output Container (Hidden initially) -->
+        <div id="key-container" class="key-box-container hidden">
+            <input type="text" id="generated-key" readonly>
+            <button class="btn copy-btn" onclick="copyKey()">Copy Key</button>
         </div>
 
-        <div class="space-y-4 mb-8">
-            <!-- Task 1 -->
-            <div id="task1-card" class="border border-panel bg-[#1f242c] rounded-lg p-4 flex items-center justify-between cursor-pointer active:scale-[0.98] transition-transform" onclick="handleTaskClick(1)">
-                <div class="flex items-center space-x-4">
-                    <div id="task1-icon" class="w-6 h-6 border-2 border-gray-500 rounded flex items-center justify-center"></div>
-                    <div>
-                        <h3 class="text-white font-semibold text-sm">Step 1: Wait</h3>
-                        <p id="task1-status" class="text-xs text-gray-500">PENDING</p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Task 2 -->
-            <div id="task2-card" class="border border-panel bg-[#1f242c] rounded-lg p-4 flex items-center justify-between cursor-pointer active:scale-[0.98] transition-transform" onclick="handleTaskClick(2)">
-                <div class="flex items-center space-x-4">
-                    <div id="task2-icon" class="w-6 h-6 border-2 border-gray-500 rounded flex items-center justify-center"></div>
-                    <div>
-                        <h3 class="text-white font-semibold text-sm">Step 2: Wait</h3>
-                        <p id="task2-status" class="text-xs text-gray-500">PENDING</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <button id="unlock-btn" disabled class="w-full bg-purple-600 text-white font-bold py-4 rounded-lg opacity-50 cursor-not-allowed transition-all" onclick="generateKey()">Unlock Key</button>
-
-        <div id="key-container" class="hidden mt-6 bg-[#0d1117] border border-green-500 rounded-lg p-4 text-center">
-            <p class="text-xs text-gray-400 mb-2">Your Key:</p>
-            <input type="text" id="generated-key" readonly class="w-full bg-transparent text-center text-green-400 font-mono font-bold text-sm outline-none cursor-pointer">
-        </div>
-    </div>
-
-    <div id="task-modal" class="fixed inset-0 bg-black/80 hidden flex items-center justify-center z-50 p-4">
-        <div class="bg-panel border-panel rounded-lg p-6 max-w-sm w-full text-center shadow-xl">
-            <h2 class="text-xl font-bold text-white mb-4">Please Wait...</h2>
-            <p class="text-sm text-gray-400 mb-6">Task time: <span id="timer-display" class="font-bold text-purple-500">10</span>s</p>
-            <button id="close-modal-btn" class="hidden w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded" onclick="closeModal()">Continue</button>
-        </div>
+        <div id="hwid-info" class="hwid-display"></div>
     </div>
 
     <script>
-        let currentHwid = new URLSearchParams(window.location.search).get('hwid');
-        const tasks = { 1: { time: 10, completed: false }, 2: { time: 10, completed: false } };
-        let currentActiveTask = null;
+        // Grab HWID from URL parameters provided by the Roblox exploit script
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentHwid = urlParams.get('hwid') || "UNKNOWN";
 
-        if (!currentHwid) document.getElementById('error-overlay').classList.remove('hidden');
-
-        function handleTaskClick(id) {
-            if (tasks[id].completed) return;
-            currentActiveTask = id;
-            document.getElementById('task-modal').classList.remove('hidden');
-            let timeLeft = tasks[id].time;
-            const timer = document.getElementById('timer-display');
-            timer.innerText = timeLeft;
-            const interval = setInterval(() => {
-                timeLeft--;
-                timer.innerText = timeLeft;
-                if (timeLeft <= 0) {
-                    clearInterval(interval);
-                    document.getElementById('close-modal-btn').classList.remove('hidden');
-                    tasks[id].completed = true;
-                }
-            }, 1000);
-        }
-
-        function closeModal() {
-            document.getElementById('task-modal').classList.add('hidden');
-            document.getElementById(`task${currentActiveTask}-icon`).innerHTML = '✓';
-            document.getElementById(`task${currentActiveTask}-status`).innerText = 'COMPLETED';
-            if (tasks[1].completed && tasks[2].completed) {
-                const btn = document.getElementById('unlock-btn');
-                btn.disabled = false;
-                btn.classList.remove('opacity-50', 'cursor-not-allowed');
-            }
+        // Display HWID for debugging if needed
+        if (currentHwid !== "UNKNOWN") {
+            document.getElementById('hwid-info').innerText = "Connected HWID: " + currentHwid;
         }
 
         function generateKey() {
+            if (currentHwid === "UNKNOWN") {
+                alert("Error: No HWID detected! Please open the link directly through your Roblox script.");
+                return;
+            }
+
+            // Matches the daily string logic in the Lua script (Valid all day)
             const date = new Date();
-            const dateStr = `${date.getUTCFullYear()}-${date.getUTCMonth()}-${date.getUTCDate()}`;
+            const dateStr = date.getUTCFullYear() + "-" + date.getUTCMonth() + "-" + date.getUTCDate();
+            
             let hash = 0;
             const str = currentHwid + dateStr + "UniSecret123";
-            for (let i = 0; i < str.length; i++) hash = (hash * 31 + str.charCodeAt(i)) % 1000000007;
-            const finalKey = `FNOFREE_Key${hash.toString(16).padStart(8, '0')}`;
+            
+            for (let i = 0; i < str.length; i++) {
+                hash = (hash * 31 + str.charCodeAt(i)) % 1000000007;
+            }
+            
+            const finalHex = hash.toString(16).padStart(8, '0');
+            const finalKey = `FNOFREE_Key${finalHex}`;
+
+            // Show the result
             document.getElementById('key-container').classList.remove('hidden');
             document.getElementById('generated-key').value = finalKey;
             document.getElementById('unlock-btn').style.display = 'none';
+        }
+
+        function copyKey() {
+            const keyInput = document.getElementById('generated-key');
+            keyInput.select();
+            keyInput.setSelectionRange(0, 99999); // For mobile devices
+            navigator.clipboard.writeText(keyInput.value);
+            
+            const copyBtn = document.querySelector('.copy-btn');
+            copyBtn.innerText = "Copied!";
+            setTimeout(() => {
+                copyBtn.innerText = "Copy Key";
+            }, 2000);
         }
     </script>
 </body>
