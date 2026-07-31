@@ -24,7 +24,6 @@
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        /* Ensures the input box hides overflowing long keys on small phones instead of stretching the screen */
         .truncate-input {
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -32,20 +31,17 @@
         }
     </style>
 </head>
-<!-- min-h-[100dvh] fixes the bottom bar clipping issue on mobile Safari/Chrome -->
 <body class="min-h-[100dvh] flex flex-col items-center justify-center p-4">
 
     <div class="w-full max-w-md bg-panel border-panel rounded-xl shadow-2xl p-6 sm:p-8 relative mx-auto">
         <h2 class="text-2xl font-bold text-white mb-6 text-center">Uni's Key System</h2>
         
-        <!-- Error Overlay -->
         <div id="error-overlay" class="absolute inset-0 bg-panel z-10 rounded-xl hidden flex-col items-center justify-center p-6 text-center">
             <h2 class="text-xl font-bold text-red-500 mb-2">Invalid Session</h2>
             <p class="text-gray-400 text-sm">Please open this link via the Roblox script.</p>
         </div>
 
         <div class="space-y-4 mb-8">
-            <!-- Task 1 -->
             <div id="task1-card" class="border border-panel bg-[#1f242c] rounded-lg p-4 flex flex-row items-center justify-between cursor-pointer active:scale-[0.98] transition-transform">
                 <div class="flex items-center space-x-4 min-w-0">
                     <div id="task1-icon" class="flex-shrink-0 w-6 h-6 border-2 border-gray-500 rounded flex items-center justify-center"></div>
@@ -56,7 +52,6 @@
                 </div>
             </div>
             
-            <!-- Task 2 -->
             <div id="task2-card" class="border border-panel bg-[#1f242c] rounded-lg p-4 flex flex-row items-center justify-between cursor-pointer active:scale-[0.98] transition-transform">
                 <div class="flex items-center space-x-4 min-w-0">
                     <div id="task2-icon" class="flex-shrink-0 w-6 h-6 border-2 border-gray-500 rounded flex items-center justify-center"></div>
@@ -68,7 +63,6 @@
             </div>
         </div>
 
-        <!-- Action Button -->
         <button id="unlock-btn" disabled class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-4 rounded-lg opacity-50 cursor-not-allowed transition-all text-base active:scale-[0.98]">
             Unlock Key
         </button>
@@ -91,7 +85,6 @@
     </div>
 
     <script>
-        // State variables
         let currentHwid = null;
         let currentActiveTask = null;
         const tasks = {
@@ -99,7 +92,6 @@
             2: { time: 10, completed: false }
         };
 
-        // Initialize safely after page loads (prevents obfuscator breaking inline events)
         window.onload = () => {
             const params = new URLSearchParams(window.location.search);
             currentHwid = params.get('hwid');
@@ -108,19 +100,15 @@
                 document.getElementById('error-overlay').classList.remove('hidden');
             }
 
-            // Bind Event Listeners
             document.getElementById('task1-card').addEventListener('click', () => { handleTaskClick(1); });
             document.getElementById('task2-card').addEventListener('click', () => { handleTaskClick(2); });
             document.getElementById('unlock-btn').addEventListener('click', generateKey);
             document.getElementById('close-modal-btn').addEventListener('click', closeModal);
-            
-            // Allow tap-to-copy on the generated key
             document.getElementById('generated-key').addEventListener('click', copyKeyToClipboard);
         };
 
         function handleTaskClick(id) {
             if (tasks[id].completed) return;
-            
             currentActiveTask = id;
             document.getElementById('task-modal').classList.remove('hidden');
             
@@ -149,11 +137,9 @@
                 const icon = document.getElementById(`task${currentActiveTask}-icon`);
                 icon.innerHTML = '✓'; 
                 icon.classList.add('border-green-500', 'text-green-500');
-                
                 document.getElementById(`task${currentActiveTask}-status`).innerText = 'COMPLETED';
             }
 
-            // Check if both are done
             if (tasks[1].completed && tasks[2].completed) {
                 const btn = document.getElementById('unlock-btn');
                 btn.disabled = false; 
@@ -163,11 +149,12 @@
 
         function generateKey() {
             const date = new Date();
-            // Strict UTC Date matching the Lua script's month-1 format (Jan = 0)
             const dateStr = date.getUTCFullYear() + "-" + date.getUTCMonth() + "-" + date.getUTCDate();
             
+            // Includes a unique minute/session hash component so regenerating gives a fresh code
+            const timeSalt = Math.floor(Date.now() / 60000); 
             let hash = 0;
-            const str = currentHwid + dateStr + "UniSecret123";
+            const str = currentHwid + dateStr + timeSalt + "UniSecret123";
             
             for (let i = 0; i < str.length; i++) {
                 hash = (hash * 31 + str.charCodeAt(i)) % 1000000007;
@@ -184,7 +171,7 @@
         function copyKeyToClipboard() {
             const keyInput = document.getElementById('generated-key');
             keyInput.select();
-            keyInput.setSelectionRange(0, 99999); // For mobile devices
+            keyInput.setSelectionRange(0, 99999);
             
             try {
                 document.execCommand('copy');
