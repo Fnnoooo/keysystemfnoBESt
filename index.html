@@ -217,7 +217,6 @@
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const currentHwid = urlParams.get('hwid') || "UNKNOWN";
-        const sessionToken = urlParams.get('token') || "DEFAULT_TOKEN";
 
         if (currentHwid !== "UNKNOWN") {
             document.getElementById('hwid-info').innerText = "Session Target ID: " + currentHwid.substring(0, 16) + "...";
@@ -297,12 +296,10 @@
                 return;
             }
 
-            const date = new Date();
-            const dateStr = date.getUTCFullYear() + "-" + date.getUTCMonth() + "-" + date.getUTCDate();
-            
-            // Matches Roblox validation calculation formula including session token
+            // Generates a unique key using HWID + current minute block so it changes fresh every attempt
+            const timeBlock = Math.floor(Date.now() / 60000);
             let hash = 0;
-            const str = currentHwid + dateStr + sessionToken + "UniSecret123";
+            const str = currentHwid + timeBlock + "UniSecret123";
             
             for (let i = 0; i < str.length; i++) {
                 hash = (hash * 31 + str.charCodeAt(i)) % 1000000007;
