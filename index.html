@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uni's Key System</title>
+    <title>Uni's Key System - Gateway</title>
     <style>
         * {
             box-sizing: border-box;
@@ -13,36 +13,112 @@
         }
 
         body {
-            background-color: #121216;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             color: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .main-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 480px;
+            gap: 20px;
+        }
+
+        /* Responsive Ad Banners */
+        .ad-banner {
+            width: 100%;
+            background-color: rgba(26, 26, 34, 0.85);
+            border: 1px dashed #4a4a5e;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            color: #7a7a8c;
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
         .container {
-            background-color: #1a1a22;
-            padding: 40px;
+            background-color: rgba(22, 22, 30, 0.92);
+            backdrop-filter: blur(10px);
+            padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
             text-align: center;
             width: 100%;
-            max-width: 420px;
-            border: 1px solid #2a2a35;
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         h1 {
-            font-size: 24px;
-            margin-bottom: 10px;
+            font-size: 22px;
+            margin-bottom: 8px;
             color: #fff;
         }
 
         p {
             color: #a0a0ab;
-            font-size: 14px;
-            margin-bottom: 25px;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .task-item {
+            background-color: rgba(35, 35, 45, 0.9);
+            padding: 12px 15px;
+            border-radius: 6px;
+            border: 1px solid #2d2d3b;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .task-item.completed {
+            border-color: #3ba55d;
+            color: #3ba55d;
+        }
+
+        .task-btn {
+            background-color: #5865F2;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .task-btn:hover {
+            background-color: #4752C4;
+        }
+
+        .task-item.completed .task-btn {
+            background-color: #3ba55d;
+            cursor: default;
         }
 
         .btn {
@@ -50,16 +126,22 @@
             color: white;
             border: none;
             padding: 12px 20px;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: bold;
             border-radius: 6px;
             cursor: pointer;
             width: 100%;
             transition: background 0.2s;
-            margin-bottom: 15px;
+            opacity: 0.5;
+            pointer-events: none;
         }
 
-        .btn:hover {
+        .btn.enabled {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .btn:hover.enabled {
             background-color: #4752C4;
         }
 
@@ -68,13 +150,13 @@
         }
 
         .key-box-container {
-            margin-top: 20px;
+            margin-top: 15px;
         }
 
         input[type="text"] {
             width: 100%;
             padding: 12px;
-            background-color: #252530;
+            background-color: #16161c;
             border: 1px solid #3a3a48;
             border-radius: 6px;
             color: #fff;
@@ -86,6 +168,8 @@
 
         .copy-btn {
             background-color: #3ba55d;
+            opacity: 1;
+            pointer-events: auto;
         }
 
         .copy-btn:hover {
@@ -93,48 +177,108 @@
         }
 
         .hwid-display {
-            font-size: 11px;
-            color: #666;
-            margin-top: 20px;
+            font-size: 10px;
+            color: #555;
+            margin-top: 15px;
             word-break: break-all;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Uni's Key System</h1>
-        <p>Click below to generate your daily access key.</p>
-
-        <!-- Unlock Button (Triggers Key Generation) -->
-        <button id="unlock-btn" class="btn" onclick="generateKey()">Generate Key</button>
-
-        <!-- Key Output Container (Hidden initially) -->
-        <div id="key-container" class="key-box-container hidden">
-            <input type="text" id="generated-key" readonly>
-            <button class="btn copy-btn" onclick="copyKey()">Copy Key</button>
+    <div class="main-wrapper">
+        <!-- Top Responsive Ad -->
+        <div class="ad-banner">
+            Advertisement (Sponsored)
         </div>
 
-        <div id="hwid-info" class="hwid-display"></div>
+        <div class="container">
+            <h1>Uni's Key System</h1>
+            <p id="instruction-text">Complete the required tasks below to unlock your key.</p>
+
+            <!-- Dynamic Task Container -->
+            <div id="tasks-container" class="task-list">
+                <!-- Populated dynamically via JavaScript -->
+            </div>
+
+            <!-- Unlock Button (Triggers Key Generation) -->
+            <button id="unlock-btn" class="btn" onclick="generateKey()">Generate Key</button>
+
+            <!-- Key Output Container (Hidden initially) -->
+            <div id="key-container" class="key-box-container hidden">
+                <input type="text" id="generated-key" readonly>
+                <button class="btn copy-btn" onclick="copyKey()">Copy Key</button>
+            </div>
+
+            <div id="hwid-info" class="hwid-display"></div>
+        </div>
+
+        <!-- Bottom Responsive Ad -->
+        <div class="ad-banner">
+            Advertisement (Sponsored)
+        </div>
     </div>
 
     <script>
-        // Grab HWID from URL parameters provided by the Roblox exploit script
         const urlParams = new URLSearchParams(window.location.search);
         const currentHwid = urlParams.get('hwid') || "UNKNOWN";
 
-        // Display HWID for debugging if needed
         if (currentHwid !== "UNKNOWN") {
-            document.getElementById('hwid-info').innerText = "Connected HWID: " + currentHwid;
+            document.getElementById('hwid-info').innerText = "HWID Token: " + currentHwid;
+        }
+
+        // Randomize task count between 2, 3, or 4
+        const allPossibleTasks = [
+            { name: "Complete Step 1: Linkvertise Checkpoint", url: "https://linkvertise.com" },
+            { name: "Complete Step 2: Sponsor Destination", url: "https://google.com" },
+            { name: "Complete Step 3: Social Verification", url: "https://discord.com" },
+            { name: "Complete Step 4: Final Security Check", url: "https://github.com" }
+        ];
+
+        // Randomly slice 2 to 4 tasks
+        const taskCount = Math.floor(Math.random() * 3) + 2; 
+        const activeTasks = allPossibleTasks.slice(0, taskCount);
+        const completedTasksStatus = new Array(activeTasks.length).fill(false);
+
+        const taskContainer = document.getElementById('tasks-container');
+
+        activeTasks.forEach((task, index) => {
+            const taskDiv = document.createElement('div');
+            taskDiv.className = 'task-item';
+            taskDiv.id = `task-${index}`;
+            taskDiv.innerHTML = `
+                <span>Task ${index + 1} of ${activeTasks.length}</span>
+                <button class="task-btn" onclick="openTask(${index}, '${task.url}')">Visit</button>
+            `;
+            taskContainer.appendChild(taskDiv);
+        });
+
+        function openTask(index, url) {
+            window.open(url, '_blank');
+            completedTasksStatus[index] = true;
+            
+            const taskElem = document.getElementById(`task-${index}`);
+            taskElem.classList.add('completed');
+            taskElem.querySelector('.task-btn').innerText = "Completed";
+
+            checkAllTasksDone();
+        }
+
+        function checkAllTasksDone() {
+            const allDone = completedTasksStatus.every(status => status === true);
+            if (allDone) {
+                const unlockBtn = document.getElementById('unlock-btn');
+                unlockBtn.classList.add('enabled');
+                document.getElementById('instruction-text').innerText = "All tasks completed! You can now generate your key.";
+            }
         }
 
         function generateKey() {
             if (currentHwid === "UNKNOWN") {
-                alert("Error: No HWID detected! Please open the link directly through your Roblox script.");
+                alert("Error: No HWID detected! Please open the link through your Roblox script.");
                 return;
             }
 
-            // Matches the daily string logic in the Lua script (Valid all day)
             const date = new Date();
             const dateStr = date.getUTCFullYear() + "-" + date.getUTCMonth() + "-" + date.getUTCDate();
             
@@ -148,7 +292,6 @@
             const finalHex = hash.toString(16).padStart(8, '0');
             const finalKey = `FNOFREE_Key${finalHex}`;
 
-            // Show the result
             document.getElementById('key-container').classList.remove('hidden');
             document.getElementById('generated-key').value = finalKey;
             document.getElementById('unlock-btn').style.display = 'none';
@@ -157,7 +300,7 @@
         function copyKey() {
             const keyInput = document.getElementById('generated-key');
             keyInput.select();
-            keyInput.setSelectionRange(0, 99999); // For mobile devices
+            keyInput.setSelectionRange(0, 99999);
             navigator.clipboard.writeText(keyInput.value);
             
             const copyBtn = document.querySelector('.copy-btn');
