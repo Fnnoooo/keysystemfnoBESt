@@ -217,12 +217,13 @@
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const currentHwid = urlParams.get('hwid') || "UNKNOWN";
+        const sessionTs = urlParams.get('ts') || "0";
 
         if (currentHwid !== "UNKNOWN") {
-            document.getElementById('hwid-info').innerText = "Session Target ID: " + currentHwid.substring(0, 16) + "...";
+            // Displays unique session identifier based on the timestamp so it changes every link
+            document.getElementById('hwid-info').innerText = "Session Target ID: " + currentHwid.substring(0, 8) + "_" + sessionTs;
         }
 
-        // Expanded pool of distinct risky/sketchy link shortener & ad redirect domains
         const sketchyUrls = [
             "https://adf.ly",
             "https://shorte.st",
@@ -232,7 +233,6 @@
             "https://boost.ink"
         ];
 
-        // Master pool of distinct tasks
         const masterQuestPool = [
             { type: "ad", title: "Checkpoint: Sponsor Ad Gate 1", actionText: "Visit Ad" },
             { type: "ad", title: "Checkpoint: Sponsor Ad Gate 2", actionText: "Visit Ad" },
@@ -240,14 +240,10 @@
             { type: "timer", title: "Checkpoint: Timed Security Verification (10s)", actionText: "Start Timer", duration: 10 }
         ];
 
-        // Randomly pick a count between 2 and 4 tasks
-        const targetTaskCount = Math.floor(Math.random() * 3) + 2; // yields 2, 3, or 4
-
-        // Shuffle and slice to get random unique tasks
+        const targetTaskCount = Math.floor(Math.random() * 3) + 2;
         const shuffledPool = [...masterQuestPool].sort(() => Math.random() - 0.5);
         const activeQuests = shuffledPool.slice(0, targetTaskCount);
 
-        // Renumber titles sequentially from 1 to N so they look clean and in order
         activeQuests.forEach((quest, index) => {
             quest.displayTitle = `Task ${index + 1}: ${quest.title.split(': ')[1]}`;
         });
@@ -271,7 +267,6 @@
             const quest = activeQuests[index];
 
             if (quest.type === "ad") {
-                // Pick a random sketchy destination url from the array
                 const randomUrl = sketchyUrls[Math.floor(Math.random() * sketchyUrls.length)];
                 window.open(randomUrl, '_blank');
                 completeQuest(index);
@@ -315,11 +310,9 @@
                 return;
             }
 
-            // Bind key to exact minute block + random salt so every generation is fully unique
-            const timeBlock = Math.floor(Date.now() / 60000);
-            const salt = Math.floor(Math.random() * 999999);
+            // Key is now strictly tied to the URL timestamp parameter so old keys fail validation instantly
             let hash = 0;
-            const str = currentHwid + timeBlock + salt + "UniSecret123";
+            const str = currentHwid + sessionTs + "UniSecret123";
             
             for (let i = 0; i < str.length; i++) {
                 hash = (hash * 31 + str.charCodeAt(i)) % 1000000007;
