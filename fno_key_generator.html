@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FNO Script - Key Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #e2e8f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 70%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .loader {
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid #3b82f6;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="p-4">
+
+    <main class="glass-panel rounded-2xl p-8 max-w-md w-full text-center relative overflow-hidden">
+        <!-- Decorative glowing orb -->
+        <div class="absolute -top-10 -left-10 w-32 h-32 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+        <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+
+        <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-2">FNO SCRIPT</h1>
+        <p class="text-sm text-slate-400 mb-8">Premium Roblox Exploit Key System</p>
+
+        <!-- Dynamic Status Section -->
+        <div id="status-container" class="mb-6">
+            <div id="hwid-status" class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-xs text-slate-300">
+                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                <span id="hwid-text">Checking Hardware ID...</span>
+            </div>
+        </div>
+
+        <div id="action-area">
+            <button id="generate-btn" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold py-3 px-4 rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center h-12" onclick="startGeneration()">
+                Generate Key
+            </button>
+        </div>
+
+        <!-- Hidden section that reveals the key -->
+        <div id="result-area" class="hidden mt-6">
+            <p class="text-xs text-slate-400 mb-2 text-left ml-1">Your HWID-Locked Key (Valid for 24h):</p>
+            <div class="relative flex items-center">
+                <input type="text" id="final-key" readonly class="w-full bg-slate-900 border border-slate-700 rounded-lg py-3 pl-4 pr-12 text-green-400 font-mono text-sm tracking-wider focus:outline-none focus:border-blue-500">
+                <button onclick="copyKey()" class="absolute right-2 p-2 hover:bg-slate-800 rounded-md transition-colors text-slate-400 hover:text-white" title="Copy to clipboard">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                </button>
+            </div>
+            <p class="text-[10px] text-red-400 mt-3 font-semibold">Do not share this key! It is locked to your IP/HWID.</p>
+        </div>
+
+        <!-- Error Message Container -->
+        <div id="error-area" class="hidden mt-4 p-3 bg-red-900/30 border border-red-500/50 rounded-lg">
+            <p class="text-sm text-red-400 font-medium">Error: Invalid Request.</p>
+            <p class="text-xs text-red-300/70 mt-1">You must open this link directly from the Roblox script so your HWID is provided.</p>
+        </div>
+    </main>
+
+    <script>
+        let currentHwid = null;
+
+        // Initialize Page
+        window.onload = function() {
+            // Check for HWID in the URL (e.g., website.com/?hwid=XYZ123)
+            const urlParams = new URLSearchParams(window.location.search);
+            currentHwid = urlParams.get('hwid');
+
+            const hwidText = document.getElementById('hwid-text');
+            const generateBtn = document.getElementById('generate-btn');
+            const errorArea = document.getElementById('error-area');
+
+            if (currentHwid) {
+                // Success: The script provided the HWID
+                hwidText.innerText = `HWID Linked: ${currentHwid.substring(0, 8)}...`;
+                hwidText.classList.replace('text-slate-300', 'text-green-400');
+            } else {
+                // Fail: User just typed the website manually without the script
+                hwidText.innerText = `HWID Missing!`;
+                hwidText.classList.replace('text-slate-300', 'text-red-400');
+                generateBtn.disabled = true;
+                generateBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                errorArea.classList.remove('hidden');
+            }
+        };
+
+        function startGeneration() {
+            const btn = document.getElementById('generate-btn');
+            btn.innerHTML = '<div class="loader"></div>';
+            btn.disabled = true;
+
+            // Simulate server connection and generation delay
+            setTimeout(() => {
+                const finalKey = generateStrictKey(currentHwid);
+                
+                // Hide button, show result
+                document.getElementById('action-area').classList.add('hidden');
+                document.getElementById('result-area').classList.remove('hidden');
+                document.getElementById('final-key').value = finalKey;
+
+                // In a REAL scenario, this is where JS sends a POST request to a Database:
+                // fetch('https://your-database.com/save-key', {
+                //    method: 'POST',
+                //    body: JSON.stringify({ key: finalKey, hwid: currentHwid })
+                // })
+            }, 1500);
+        }
+
+        function generateStrictKey(hwid) {
+            const prefix = "FNOFREE_Key";
+            const normalChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01345789"; // Removed 6 and 2 to avoid accidental duplicates
+            
+            // 1. Generate 15 random filler characters
+            let filler = "";
+            for (let i = 0; i < 15; i++) {
+                filler += normalChars.charAt(Math.floor(Math.random() * normalChars.length));
+            }
+
+            // 2. We MUST inject '6', '2', and '/'
+            let keyArray = filler.split('');
+            const requiredChars = ['6', '2', '/'];
+
+            // 3. Insert them at random positions within the array
+            requiredChars.forEach(char => {
+                const randomPosition = Math.floor(Math.random() * (keyArray.length + 1));
+                keyArray.splice(randomPosition, 0, char);
+            });
+
+            // Combine everything
+            return prefix + keyArray.join('');
+        }
+
+        function copyKey() {
+            const keyInput = document.getElementById('final-key');
+            keyInput.select();
+            keyInput.setSelectionRange(0, 99999); // For mobile devices
+            document.execCommand('copy');
+            
+            // Visual feedback
+            const originalColor = keyInput.style.borderColor;
+            keyInput.style.borderColor = '#4ade80'; // Green
+            setTimeout(() => {
+                keyInput.style.borderColor = originalColor;
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
