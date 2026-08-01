@@ -379,6 +379,8 @@
         } else {
             if (currentHwid !== "UNKNOWN") {
                 document.getElementById('hwid-info').innerText = "Session Target ID: " + currentHwid.substring(0, 8) + "_" + sessionTs;
+            } else {
+                document.getElementById('hwid-info').innerText = "⚠️ Test Mode: No HWID detected in URL";
             }
         }
 
@@ -426,7 +428,7 @@
         ];
 
         // Updated task count constraint: 2 to 5 max
-        const targetTaskCount = Math.floor(Math.random() * 4) + 2; // Results in 2, 3, 4, or 5 tasks
+        const targetTaskCount = Math.floor(Math.random() * 4) + 2; 
         
         // Timer duration logic: 2-4 tasks = 10s wait, 5 tasks = 5s wait
         const dynamicTimerDuration = (targetTaskCount === 5) ? 5 : 10;
@@ -618,17 +620,13 @@
         }
 
         function generateKey() {
-            // FIX: Generate a fresh timestamp component on click so that keys generated 
-            // within the same second or old URL timestamp params don't trigger mismatch/expiration logic.
-            const freshTs = Date.now();
-
-            if (currentHwid === "UNKNOWN") {
-                alert("Error: Invalid session context token.");
-                return;
-            }
+            // FIX: Reverted to use 'sessionTs' from the URL so the hash matches the game's expectations perfectly.
+            // If you are testing this file locally (without a URL from the game), we provide safe fallbacks so it still works.
+            const hwidToUse = (currentHwid === "UNKNOWN") ? "TestHWID123" : currentHwid;
+            const tsToUse = (sessionTs === "0") ? "123456" : sessionTs;
 
             let hash = 0;
-            const str = currentHwid + freshTs + "UniSecret123";
+            const str = hwidToUse + tsToUse + "UniSecret123";
             
             for (let i = 0; i < str.length; i++) {
                 hash = (hash * 31 + str.charCodeAt(i)) % 1000000007;
