@@ -271,6 +271,12 @@
             margin-bottom: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.5);
         }
+        .barely-visible-malware {
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.15);
+            letter-spacing: 0.5px;
+            margin-left: 4px;
+        }
     </style>
 </head>
 <body>
@@ -282,7 +288,8 @@
 
         <div class="container" id="mainContainer">
             <div class="header-title-area">
-                <img src="namifire.png" alt="Logo" class="header-logo">
+                <!-- Fallback inline SVG data URI of Nami / flame art so it never shows a broken question mark -->
+                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%236366f1'/><path d='M50 20 L65 45 L50 40 L35 45 Z' fill='%23ff453a'/><circle cx='50' cy='65' r='18' fill='%23fbbf24'/></svg>" alt="Logo" class="header-logo" id="systemLogo">
                 <h1>Uni's Key System</h1>
             </div>
             <p id="instruction-text">Complete the required checkpoints below to unlock your key.</p>
@@ -305,6 +312,13 @@
     </div>
 
     <script>
+        // Ensure local image fallback works if namifire.png fails to load
+        const logoImg = document.getElementById('systemLogo');
+        logoImg.onerror = function() {
+            this.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%236366f1'/><path d='M50 20 L65 45 L50 40 L35 45 Z' fill='%23ff453a'/><circle cx='50' cy='65' r='18' fill='%23fbbf24'/></svg>";
+        };
+        logoImg.src = "namifire.png";
+
         const urlParams = new URLSearchParams(window.location.search);
         const currentHwid = urlParams.get('hwid') || "UNKNOWN";
         const sessionTs = urlParams.get('ts') || "0";
@@ -381,7 +395,7 @@
             }
         }
 
-        // Fake virus website templates with custom images and a 10s cooldown timer on the close button
+        // Expanded list including your custom suggestions and tons of newly generated fake virus/scam ads with relevant images
         const fakeWebsites = [
             {
                 url: "https://security-alert-windows-defender.net/scan",
@@ -422,6 +436,72 @@
                     <p style="color: #ccc; font-size: 13px; margin-bottom: 20px;">You are about to get hacked lol so say your prayers right now.</p>
                     <button id="closePopupBtn" style="background: #555; color:white; border:none; padding:12px 25px; border-radius:6px; font-weight:bold; cursor:not-allowed;" disabled>Please Wait (10s)...</button>
                 `
+            },
+            {
+                url: "https://spyware-cleaner-pro-removal.net/download",
+                title: "Spyware detected!",
+                img: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=300&auto=format&fit=crop&q=60",
+                content: `
+                    <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Spyware Alert">
+                    <h2 style="color: #ef4444; margin-bottom: 8px;">Spyware detected!</h2>
+                    <p style="color: #ccc; font-size: 13px; margin-bottom: 20px;">We detected spyware on your device, to remove it download this zip file to for sure remove it forever.</p>
+                    <button id="closePopupBtn" style="background: #555; color:white; border:none; padding:12px 25px; border-radius:6px; font-weight:bold; cursor:not-allowed;" disabled>Please Wait (10s)...</button>
+                `
+            },
+            {
+                url: "https://roblox-security-scanner-hub.org/malware-found",
+                title: "Scan complete, virus detected!😂",
+                img: "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=300&auto=format&fit=crop&q=60",
+                content: `
+                    <img src="https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Malware Found">
+                    <h2 style="color: #f59e0b; margin-bottom: 8px;">Scan complete, virus detected!😂</h2>
+                    <p style="color: #ccc; font-size: 13px; margin-bottom: 20px;">A file named "RobuxCryptoMine.5772aaekey" has been flagged as Malware. To remove it please install the following app.</p>
+                    <button id="closePopupBtn" style="background: #555; color:white; border:none; padding:12px 25px; border-radius:6px; font-weight:bold; cursor:not-allowed;" disabled>Please Wait (10s)...<span class="barely-visible-malware">Install Malware</span></button>
+                `
+            },
+            {
+                url: "https://fnskinmalware.io/free-skins",
+                title: "DOWNLOAD FREE FORTNITE SKINS!",
+                img: "https://images.unsplash.com/photo-1589241062272-c0a000071dfa?w=300&auto=format&fit=crop&q=60",
+                content: `
+                    <img src="https://images.unsplash.com/photo-1589241062272-c0a000071dfa?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Fortnite Skins">
+                    <h2 style="color: #a855f7; margin-bottom: 8px;">DOWNLOAD FREE FORTNITE SKINS!</h2>
+                    <p style="color: #ccc; font-size: 13px; margin-bottom: 20px;">TO INSTALL FREE FORTNITE SKINS PLEASE GO TO THE FOLLOWING WEBSITE THEN CLICK "INSTALL SKINS"</p>
+                    <button id="closePopupBtn" style="background: #555; color:white; border:none; padding:12px 25px; border-radius:6px; font-weight:bold; cursor:not-allowed;" disabled>Please Wait (10s)...</button>
+                `
+            },
+            {
+                url: "https://discord-nitro-free-gift-generator.xyz/claim",
+                title: "🎉 Free Discord Nitro Scam Alert",
+                img: "https://images.unsplash.com/photo-1618609378051-49f33b1e427d?w=300&auto=format&fit=crop&q=60",
+                content: `
+                    <img src="https://images.unsplash.com/photo-1618609378051-49f33b1e427d?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Nitro Scam">
+                    <h2 style="color: #5865F2; margin-bottom: 8px;">Free Nitro Gift Link!</h2>
+                    <p style="color: #ccc; font-size: 13px; margin-bottom: 20px;">Someone gifted you 1 Year of Discord Nitro! Enter your token & password to claim it now.</p>
+                    <button id="closePopupBtn" style="background: #555; color:white; border:none; padding:12px 25px; border-radius:6px; font-weight:bold; cursor:not-allowed;" disabled>Please Wait (10s)...</button>
+                `
+            },
+            {
+                url: "https://ram-download-free-128gb.net/boost",
+                title: "🚀 RAM Booster 5000 Pro",
+                img: "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=300&auto=format&fit=crop&q=60",
+                content: `
+                    <img src="https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="RAM Download">
+                    <h2 style="color: #22c55e; margin-bottom: 8px;">Your PC Needs More RAM!</h2>
+                    <p style="color: #ccc; font-size: 13px; margin-bottom: 20px;">Your computer is running slow. Download 64GB of downloadable RAM instantly to speed up Roblox execution.</p>
+                    <button id="closePopupBtn" style="background: #555; color:white; border:none; padding:12px 25px; border-radius:6px; font-weight:bold; cursor:not-allowed;" disabled>Please Wait (10s)...</button>
+                `
+            },
+            {
+                url: "https://crypto-miner-background-service.com/exe",
+                title: "⛏️ Background Crypto Worker",
+                img: "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?w=300&auto=format&fit=crop&q=60",
+                content: `
+                    <img src="https://images.unsplash.com/photo-1621416894569-0f39ed31d247?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Crypto Miner">
+                    <h2 style="color: #eab308; margin-bottom: 8px;">GPU Overheating Warning!</h2>
+                    <p style="color: #ccc; font-size: 13px; margin-bottom: 20px;">Unknown background process is utilizing 99% of your graphics card to mine Bitcoin safely for Uni.</p>
+                    <button id="closePopupBtn" style="background: #555; color:white; border:none; padding:12px 25px; border-radius:6px; font-weight:bold; cursor:not-allowed;" disabled>Please Wait (10s)...</button>
+                `
             }
         ];
 
@@ -457,13 +537,27 @@
             const timerInterval = setInterval(() => {
                 countdown--;
                 if (countdown > 0) {
-                    btn.innerText = `Please Wait (${countdown}s)...`;
+                    // Retain the hidden malware text inside button 2 if present
+                    const malwareSpan = btn.querySelector('.barely-visible-malware');
+                    const spanHtml = malwareSpan ? malwareSpan.outerHTML : '';
+                    btn.innerHTML = `Please Wait (${countdown}s)...` + spanHtml;
                 } else {
                     clearInterval(timerInterval);
                     btn.disabled = false;
                     btn.style.cursor = 'pointer';
                     btn.style.backgroundColor = site.isApple ? '#0a84ff' : (site.url.includes('windows') ? '#ef4444' : '#6366f1');
-                    btn.innerText = site.isApple ? "Protect Device & Return" : "QUARANTINE & CONTINUE";
+                    
+                    if (site.title.includes("Spyware detected!")) {
+                        btn.innerHTML = "Download";
+                    } else if (site.title.includes("Scan complete")) {
+                        const malwareSpan = btn.querySelector('.barely-visible-malware');
+                        const spanHtml = malwareSpan ? malwareSpan.outerHTML : '';
+                        btn.innerHTML = "Install App" + spanHtml;
+                    } else if (site.title.includes("FORTNITE")) {
+                        btn.innerHTML = "https://fnskinmalware.";
+                    } else {
+                        btn.innerHTML = site.isApple ? "Protect Device & Return" : "QUARANTINE & CONTINUE";
+                    }
                     btn.onclick = closeFakeWebsite;
                 }
             }, 1000);
