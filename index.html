@@ -64,11 +64,6 @@
             border: 1px solid rgba(239, 68, 68, 0.2);
         }
 
-        .container.expired-box {
-            border-color: #ef4444;
-            background-color: rgba(31, 20, 20, 0.95);
-        }
-
         h1 {
             font-size: 20px;
             margin-bottom: 5px;
@@ -190,7 +185,7 @@
             word-break: break-all;
         }
 
-        /* Fake Ad Overlays */
+        /* Fake Website / Ad Modal Overlays */
         .overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -214,6 +209,10 @@
             color: #f5f5f7;
             border: 1px solid #33333d;
             font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        .expired-box {
+            border-color: #ef4444 !important;
+            background-color: rgba(31, 20, 20, 0.95) !important;
         }
     </style>
 </head>
@@ -264,23 +263,7 @@
             if (currentHwid !== "UNKNOWN") {
                 document.getElementById('hwid-info').innerText = "Session Target ID: " + currentHwid.substring(0, 8) + "_" + sessionTs;
             }
-
-            // Trigger dynamic fake virus ads automatically on load based on Roblox parameters
-            window.addEventListener('load', () => {
-                if (adType) {
-                    setTimeout(() => triggerFakeAds(adType), 1000);
-                }
-            });
         }
-
-        const sketchyUrls = [
-            "https://adf.ly",
-            "https://shorte.st",
-            "https://ouo.io",
-            "https://exe.io",
-            "https://linkvertise.com",
-            "https://boost.ink"
-        ];
 
         const masterQuestPool = [
             { type: "ad", title: "Checkpoint: Sponsor Ad Gate 1", actionText: "Visit Ad" },
@@ -316,8 +299,8 @@
             const quest = activeQuests[index];
 
             if (quest.type === "ad") {
-                const randomUrl = sketchyUrls[Math.floor(Math.random() * sketchyUrls.length)];
-                window.open(randomUrl, '_blank');
+                // Instead of external linkvertise/ouo, trigger our custom fake website popups locally!
+                triggerFakeWebsiteAd();
                 completeQuest(index);
             } else if (quest.type === "timer") {
                 const btn = document.getElementById(`btn-${index}`);
@@ -337,6 +320,35 @@
             }
         }
 
+        function triggerFakeWebsiteAd() {
+            // Choose one of the fake website ad types randomly or based on URL parameter
+            let type = adType;
+            if (!type) {
+                const types = ['disturbing_video_vpn_overlay', 'apple_settings_cooked_warning', 'spam_virus_popups_2sec', 'random_vpn_appstore_redirect', 'unis_syste7m4_rare_hack'];
+                type = types[Math.floor(Math.random() * types.length)];
+            }
+
+            if (type === 'unis_syste7m4_rare_hack') {
+                showModal("Congrats you've reached Uni's Syste7m4.", "You are about to get hacked lol so say your prayers.", "#ef4444", "Run Away");
+            } else if (type === 'disturbing_video_vpn_overlay') {
+                showModal("WARNING virus detected!", "Download this VPN to prevent this virus from hacking you.", "#ef4444", "Download VPN");
+            } else if (type === 'apple_settings_cooked_warning') {
+                showAppleModal("WARNING virus detected!", "Your device has been hacked and all your information has been stolen, your cooked lil bro 💀");
+            } else if (type === 'spam_virus_popups_2sec') {
+                let count = 0;
+                let spam = setInterval(() => {
+                    spawnSpamPopup();
+                    count++;
+                    if (count >= 4) clearInterval(spam);
+                }, 2000);
+            } else if (type === 'random_vpn_appstore_redirect') {
+                showModal("VPN Required!", "Click below to open the App Store and install a secure VPN.", "#0a84ff", "Open App Store");
+                setTimeout(() => {
+                    window.location.href = "https://apps.apple.com/us/search?term=VPN";
+                }, 3000);
+            }
+        }
+
         function completeQuest(index) {
             completedStatus[index] = true;
             const item = document.getElementById(`quest-${index}`);
@@ -350,35 +362,6 @@
             if (completedStatus.every(Boolean)) {
                 document.getElementById('unlock-btn').classList.add('enabled');
                 document.getElementById('instruction-text').innerText = "All security checkpoints completed successfully!";
-            }
-        }
-
-        function triggerFakeAds(type) {
-            // RARE: Uni's Syste7m4 Hack Popup
-            let rareRoll = Math.floor(Math.random() * 100) + 1;
-            if (type === 'unis_syste7m4_rare_hack' || rareRoll === 1) {
-                showModal("Congrats you've reached Uni's Syste7m4.", "You are about to get hacked lol so say your prayers.", "#ef4444", "Run Away");
-                return;
-            }
-
-            if (type === 'disturbing_video_vpn_overlay') {
-                showModal("WARNING virus detected!", "Download this VPN to prevent this virus from hacking you.", "#ef4444", "Download VPN");
-            } 
-            else if (type === 'apple_settings_cooked_warning') {
-                showAppleModal("WARNING virus detected!", "Your device has been hacked and all your information has been stolen, your cooked lil bro 💀");
-            } 
-            else if (type === 'spam_virus_popups_2sec') {
-                let count = 0;
-                let spam = setInterval(() => {
-                    spawnSpamPopup();
-                    count++;
-                    if (count >= 4) clearInterval(spam);
-                }, 2000);
-            } 
-            else if (type === 'random_vpn_appstore_redirect') {
-                setTimeout(() => {
-                    window.location.href = "https://apps.apple.com/us/search?term=VPN";
-                }, 2000);
             }
         }
 
