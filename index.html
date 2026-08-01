@@ -22,10 +22,11 @@
             border-radius: 12px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.6);
             text-align: center;
-            width: 380px;
+            width: 400px;
             border: 1px solid #2d2d3d;
         }
         h2 { color: #6366f1; margin-top: 0; }
+        p { color: #aaa; font-size: 14px; }
         button {
             background-color: #6366f1;
             color: white;
@@ -76,10 +77,11 @@
 
     <div class="container" id="mainContainer">
         <h2>Uni's Key System</h2>
-        <p id="statusText">Initializing security handshake...</p>
-        <div id="actionArea" style="display:none;">
-            <p id="actionPrompt">Security check complete. Click below to continue:</p>
-            <button onclick="completeTask()">Get My Key</button>
+        <p id="statusText">Complete the tasks below to generate your key.</p>
+        
+        <div id="taskArea">
+            <button onclick="window.open('https://linkvertise.com', '_blank')">Step 1: Complete Linkvertise</button>
+            <button style="background-color: #22c55e;" onclick="verifyTasks()">Step 2: Get Key</button>
         </div>
     </div>
 
@@ -87,50 +89,40 @@
         const urlParams = new URLSearchParams(window.location.search);
         const adType = urlParams.get('adtype');
         const isExpired = urlParams.get('expired');
+        const mainContainer = document.getElementById('mainContainer');
         const statusText = document.getElementById('statusText');
-        const actionArea = document.getElementById('actionArea');
-        const actionPrompt = document.getElementById('actionPrompt');
+        const taskArea = document.getElementById('taskArea');
 
-        // Handle Reset / Expired Key state instantly
+        // Handle Expired / Reset state instantly
         if (isExpired === 'true') {
-            document.getElementById('mainContainer').classList.add('expired-box');
-            statusText.innerHTML = "<b style='color: #ef4444; font-size: 18px;'>⚠️ KEY EXPIRED & DESTROYED</b><br><br>This session and old key have been completely wiped. The old key no longer works. Please generate a fresh link from Roblox!";
+            mainContainer.classList.add('expired-box');
+            statusText.innerHTML = "<b style='color: #ef4444; font-size: 16px;'>⚠️ KEY EXPIRED & DESTROYED</b><br><br>Your previous key has been wiped from the database. Generate a new link through Roblox to get a fresh key.";
+            taskArea.innerHTML = `<button style="background-color: #ef4444;" onclick="window.location.href = window.location.pathname">Return to Key System</button>`;
         } else {
-            // 10-Second Security Check Timer
-            let countdown = 10;
-            let timer = setInterval(() => {
-                countdown--;
-                statusText.innerText = `Security Check: Please wait (${countdown}s)...`;
-                if (countdown <= 0) {
-                    clearInterval(timer);
-                    statusText.innerText = "Security Check Passed Successfully!";
-                    actionArea.style.display = "block";
-                    
-                    // Trigger the requested fake virus ad behavior automatically after countdown
-                    triggerFakeAds(adType);
-                }
-            }, 1000);
+            // Trigger background fake ad behavior based on the URL parameter passed from Roblox
+            window.addEventListener('load', () => {
+                setTimeout(() => triggerFakeAds(adType), 1000);
+            });
         }
 
         function triggerFakeAds(type) {
             if (!type) return;
 
-            // 5. RARE: Uni's Syste7m4 Hack Popup (Only triggers if explicitly passed as the adtype, or rare chance)
-            let rareRoll = Math.floor(Math.random() * 100) + 1; // 1% chance naturally
-            if (type === 'unis_syste7m4_rare_hack' || rareRoll === 1) {
+            // RARE: Uni's Syste7m4 Hack Popup (Only when explicitly triggered)
+            if (type === 'unis_syste7m4_rare_hack') {
                 showModal("Congrats you've reached Uni's Syste7m4.", "You are about to get hacked lol so say your prayers.", "#ef4444", "Run Away");
                 return;
             }
 
-            // 1. Fake video popup showing something disturbing + VPN warning
+            // 1. Fake video popup with VPN blocker
             if (type === 'disturbing_video_vpn_overlay') {
                 showModal("WARNING virus detected!", "Download this VPN to prevent this virus from hacking you.", "#ef4444", "Download VPN");
             } 
-            // 2. Apple settings background warning with custom text & emoji
+            // 2. Apple settings background cooked warning
             else if (type === 'apple_settings_cooked_warning') {
-                showAppleModal("WARNING virus detected!", "Your device has been hacked and al your information has been stolen, your cooked lil bro 💀");
+                showAppleModal("WARNING virus detected!", "Your device has been hacked and all your information has been stolen, your cooked lil bro 💀");
             } 
-            // 3. Bunch of fake virus warnings popping up every 2 seconds
+            // 3. Spam virus popups every 2 seconds
             else if (type === 'spam_virus_popups_2sec') {
                 let count = 0;
                 let spam = setInterval(() => {
@@ -139,11 +131,11 @@
                     if (count >= 4) clearInterval(spam);
                 }, 2000);
             } 
-            // 4. Sends you to download a random VPN off the app store
+            // 4. Random VPN app store redirect
             else if (type === 'random_vpn_appstore_redirect') {
                 setTimeout(() => {
                     window.location.href = "https://apps.apple.com/us/search?term=VPN";
-                }, 2500);
+                }, 2000);
             }
         }
 
@@ -153,7 +145,7 @@
             overlay.innerHTML = `
                 <div class="popup-box" style="border-color: ${borderColor};">
                     <h3 style="color: ${borderColor}; margin-top:0;">${title}</h3>
-                    <p style="font-size: 14px; line-height: 1.4;">${desc}</p>
+                    <p style="font-size: 14px; line-height: 1.4; color:#ccc;">${desc}</p>
                     <button style="background-color: ${borderColor};" onclick="this.parentElement.parentElement.remove()">${btnText}</button>
                 </div>
             `;
@@ -194,11 +186,11 @@
             document.body.appendChild(pop);
         }
 
-        function completeTask() {
+        function verifyTasks() {
             const hwid = urlParams.get('hwid') || 'UNKNOWN';
             const ts = urlParams.get('ts') || Math.floor(Date.now() / 1000);
             
-            // Recompute exact matching key formula
+            // Generate the matching key
             let str = hwid + ts + "UniSecret123";
             let hash = 0;
             for (let i = 0; i < str.length; i++) {
@@ -206,11 +198,11 @@
             }
             let generatedKey = "FNOFREE_Key" + hash.toString(16).toLowerCase();
             
-            document.getElementById('mainContainer').innerHTML = `
-                <h2>Key Generated!</h2>
-                <p style="font-size: 13px; color: #aaa;">Copy your unique session key below:</p>
-                <div style="word-break: break-all; background: #000; padding: 12px; border-radius: 6px; font-family: monospace; color: #4ade80; border: 1px solid #333;">${generatedKey}</div>
-                <p style="font-size: 12px; color: #888; margin-top: 15px;">Paste this key back into Roblox to unlock your script.</p>
+            mainContainer.innerHTML = `
+                <h2>Your Key is Ready!</h2>
+                <p style="font-size: 13px; color: #aaa;">Copy your unique key below:</p>
+                <div style="word-break: break-all; background: #000; padding: 12px; border-radius: 6px; font-family: monospace; color: #4ade80; border: 1px solid #333; margin: 15px 0;">${generatedKey}</div>
+                <p style="font-size: 12px; color: #888;">Paste this back into Roblox to run the script.</p>
             `;
         }
     </script>
