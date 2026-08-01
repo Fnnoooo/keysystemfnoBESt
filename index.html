@@ -51,6 +51,13 @@
             font-weight: bold;
             letter-spacing: 0.5px;
             box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .ad-banner:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
         }
 
         .container {
@@ -279,8 +286,8 @@
 <body>
 
     <div class="main-wrapper">
-        <div class="ad-banner">
-            ⚠️ WARNING: Critical System Driver Update Available! Click to Scan Device!
+        <div class="ad-banner" id="topBanner" onclick="openBannerAd(this)">
+            Loading Advertisement...
         </div>
 
         <div class="container" id="mainContainer">
@@ -302,8 +309,8 @@
             <div id="hwid-info" class="hwid-display"></div>
         </div>
 
-        <div class="ad-banner">
-            🔥 SPONSORED: Play This New 3D MMORPG Without Downloading! Instant Access!
+        <div class="ad-banner" id="bottomBanner" onclick="openBannerAd(this)">
+            Loading Advertisement...
         </div>
     </div>
 
@@ -344,7 +351,39 @@
             }
         }
 
-        // Expanded master pool including your custom ideas + randomized selection logic
+        // Clickable Banners Logic
+        const clickableBannerPool = [
+            { text: "⚠️ WARNING: Critical System Driver Update Available! Click to Scan Device!", url: "https://system-driver-update-tool.net" },
+            { text: "🔥 SPONSORED: Play This New 3D MMORPG Without Downloading! Instant Access!", url: "https://instant-mmo-gaming.com" },
+            { text: "💰 ELON MUSK IS DOUBLING BTC! Send 0.1 BTC to receive 0.2 BTC instantly!", url: "https://crypto-giveaway-event.org" },
+            { text: "🚨 ALERT: Your IP address is exposed! Hackers can see you. Click here to secure it!", url: "https://nord-vpn-secure-ip.net" },
+            { text: "💎 GENERATE 100,000 ROBUX: No human verification required! Click to start!", url: "https://free-robux-gen-2026.com" },
+            { text: "📱 APPLE REWARDS: You have been selected to win a free iPhone 15 Pro Max!", url: "https://apple-customer-rewards.org" },
+            { text: "💋 LOCAL DATING: Find verified singles in your area looking to chat tonight!", url: "https://local-singles-meetup.com" },
+            { text: "⚡ SLOW PC? Download PC Speed Optimizer 2026 to boost FPS by 300%!", url: "https://pc-speed-booster-pro.net" }
+        ];
+
+        function randomizeBanners() {
+            const shuffledBanners = [...clickableBannerPool].sort(() => Math.random() - 0.5);
+            
+            const topBanner = document.getElementById('topBanner');
+            topBanner.innerText = shuffledBanners[0].text;
+            topBanner.dataset.url = shuffledBanners[0].url;
+
+            const bottomBanner = document.getElementById('bottomBanner');
+            bottomBanner.innerText = shuffledBanners[1].text;
+            bottomBanner.dataset.url = shuffledBanners[1].url;
+        }
+
+        function openBannerAd(element) {
+            if (element.dataset.url) {
+                window.open(element.dataset.url, '_blank');
+            }
+        }
+
+        randomizeBanners();
+
+        // REDUCED TIMERS SO YOUR KEY DOESN'T EXPIRE!
         const masterQuestPool = [
             { type: "ad", title: "Checkpoint: Download The Best Gaming Browser", actionText: "Download" },
             { type: "ad", title: "Checkpoint: Visit The Best Holiday Shop", actionText: "Explore Shop" },
@@ -355,16 +394,17 @@
             { type: "ad", title: "Checkpoint: Discover Hidden Secret Codes", actionText: "Find Codes" },
             { type: "ad", title: "Checkpoint: Upgrade Your RAM Instantly", actionText: "Boost Now" },
             { type: "ad", title: "Checkpoint: Spin to Win Unlimited Robux", actionText: "Spin Wheel" },
-            { type: "timer", title: "Checkpoint: Verification Timer (10s)", actionText: "Verify", duration: 10 },
-            { type: "timer", title: "Checkpoint: Extra Security Check (15s)", actionText: "Start Timer", duration: 15 }
+            { type: "timer", title: "Checkpoint: Verification Timer (3s)", actionText: "Verify", duration: 3 },
+            { type: "timer", title: "Checkpoint: Extra Security Check (5s)", actionText: "Start Timer", duration: 5 }
         ];
 
-        // Randomize task count between 3 and 7 tasks
-        const targetTaskCount = Math.floor(Math.random() * 5) + 3; 
+        // Limits tasks to between 2 and 4 (prevents long wait times)
+        const targetTaskCount = Math.floor(Math.random() * 3) + 2; 
         const shuffledPool = [...masterQuestPool].sort(() => Math.random() - 0.5);
         const activeQuests = shuffledPool.slice(0, targetTaskCount);
 
-        const currentPopupWaitTime = (targetTaskCount >= 5) ? 4 : 10;
+        // Sets fake popup wait time strictly to 3 seconds max
+        const currentPopupWaitTime = 3;
 
         activeQuests.forEach((quest, index) => {
             quest.displayTitle = quest.title;
@@ -465,6 +505,75 @@
                     <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Winner Popup">
                     <h2 style="color: #22c55e; margin-bottom: 8px;">CONGRATULATIONS VISITOR!</h2>
                     <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">You are our 1,000,000th visitor! Click below to claim your verified rewards package instantly.</p>
+                `
+            },
+            // NEW FAKE ADS ADDED BELOW
+            {
+                url: "https://microsoft-support-locked-pc.com/call-now",
+                title: "🚨 YOUR COMPUTER HAS BEEN BLOCKED 🚨",
+                buttonText: "Contact Support",
+                img: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=300&auto=format&fit=crop&q=60",
+                content: `
+                    <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Locked Screen">
+                    <h2 style="color: #ef4444; margin-bottom: 8px;">WINDOWS BLOCKED</h2>
+                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Error #268D3. Please do not turn off your PC. Call Support immediately to prevent data loss!</p>
+                `
+            },
+            {
+                url: "https://vpn-secure-web-proxy.org/download",
+                title: "⚠️ Connection Not Secure",
+                buttonText: "Enable VPN",
+                img: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=300&auto=format&fit=crop&q=60",
+                content: `
+                    <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Server Hacking">
+                    <h2 style="color: #f59e0b; margin-bottom: 8px;">HACKERS ARE WATCHING</h2>
+                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Your ISP is exposing your location! Enable military-grade encryption to proceed safely.</p>
+                `
+            },
+            {
+                url: "https://crypto-miner-alert-registry.net/remove",
+                title: "Cryptojacking Script Blocked",
+                buttonText: "Remove Miner",
+                hasMalwareSub: true,
+                img: "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?w=300&auto=format&fit=crop&q=60",
+                content: `
+                    <img src="https://images.unsplash.com/photo-1621416894569-0f39ed31d247?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Bitcoin">
+                    <h2 style="color: #ef4444; margin-bottom: 8px;">MINING SCRIPT DETECTED</h2>
+                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">A website is using your GPU to mine Monero. Install removal tool to stop hardware degradation.</p>
+                `
+            },
+            {
+                url: "https://flash-player-update-now.com/install",
+                title: "Flash Player Out of Date",
+                buttonText: "Update Now",
+                img: "https://images.unsplash.com/photo-1547394765-185e1e68f34e?w=300&auto=format&fit=crop&q=60",
+                content: `
+                    <img src="https://images.unsplash.com/photo-1547394765-185e1e68f34e?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Outdated Software">
+                    <h2 style="color: #3b82f6; margin-bottom: 8px;">UPDATE REQUIRED</h2>
+                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Media elements on this page require the latest version of Adobe Flash Player.</p>
+                `
+            },
+            {
+                url: "https://amazon-survey-rewards-center.org/claim",
+                title: "🎁 Answer Survey to Win!",
+                buttonText: "Start Survey",
+                img: "https://images.unsplash.com/photo-1607082349566-187342175e2f?w=300&auto=format&fit=crop&q=60",
+                content: `
+                    <img src="https://images.unsplash.com/photo-1607082349566-187342175e2f?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Gift Card">
+                    <h2 style="color: #22c55e; margin-bottom: 8px;">$1000 AMAZON GIFT CARD</h2>
+                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Complete a quick 3-minute survey about your internet habits to claim your reward!</p>
+                `
+            },
+            {
+                url: "https://browser-damaged-virus-alert.net/scan",
+                title: "Browser Severely Damaged by (4) Viruses!",
+                buttonText: "Repair Browser",
+                hasMalwareSub: true,
+                img: "https://images.unsplash.com/photo-1584433144859-1fc3ab64a957?w=300&auto=format&fit=crop&q=60",
+                content: `
+                    <img src="https://images.unsplash.com/photo-1584433144859-1fc3ab64a957?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Glitch Virus">
+                    <h2 style="color: #ef4444; margin-bottom: 8px;">CRITICAL BROWSER ERROR</h2>
+                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Your recent browsing has infected your system with 4 malicious Trojans. Immediate repair needed.</p>
                 `
             }
         ];
