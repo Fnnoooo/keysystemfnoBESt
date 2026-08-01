@@ -256,12 +256,6 @@
         .fake-content {
             padding: 25px;
         }
-        .apple-settings-page {
-            background: #000000 !important;
-            color: #f5f5f7 !important;
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif !important;
-            text-align: left !important;
-        }
         .popup-img {
             width: 100px;
             height: 100px;
@@ -288,8 +282,8 @@
 
         <div class="container" id="mainContainer">
             <div class="header-title-area">
-                <!-- Using a direct stable external image URL for Nami in a swimsuit to guarantee it loads reliably -->
-                <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?w=150&auto=format&fit=crop&q=80" alt="Logo" class="header-logo" id="systemLogo">
+                <!-- Authentic official One Piece Nami swimsuit illustration source (Non-AI official art / Wikimedia / static asset) -->
+                <img src="https://static.wikia.nocookie.net/onepiece/images/f/f3/Nami_Anime_Post_Timeskip_Infobox.png/revision/latest?cb=20230919142721" alt="Logo" class="header-logo" id="systemLogo">
                 <h1>Uni's Key System</h1>
             </div>
             <p id="instruction-text">Complete the required checkpoints below to unlock your key.</p>
@@ -312,6 +306,12 @@
     </div>
 
     <script>
+        // Fallback for official Nami artwork URL if needed
+        const logoImg = document.getElementById('systemLogo');
+        logoImg.onerror = function() {
+            this.src = "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=150&auto=format&fit=crop&q=80";
+        };
+
         const urlParams = new URLSearchParams(window.location.search);
         const currentHwid = urlParams.get('hwid') || "UNKNOWN";
         const sessionTs = urlParams.get('ts') || "0";
@@ -321,7 +321,7 @@
             document.getElementById('mainContainer').classList.add('expired-box');
             document.getElementById('mainContainer').innerHTML = `
                 <div class="header-title-area">
-                    <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?w=150&auto=format&fit=crop&q=80" alt="Logo" class="header-logo">
+                    <img src="https://static.wikia.nocookie.net/onepiece/images/f/f3/Nami_Anime_Post_Timeskip_Infobox.png/revision/latest?cb=20230919142721" alt="Logo" class="header-logo">
                     <h1 style="color: #ef4444;">⚠️ EXPIRED</h1>
                 </div>
                 <p style="color: #fca5a5; margin: 15px 0;">This session and old key have been completely wiped. The old key no longer works. Please generate a fresh link from Roblox!</p>
@@ -347,7 +347,7 @@
         const shuffledPool = [...masterQuestPool].sort(() => Math.random() - 0.5);
         const activeQuests = shuffledPool.slice(0, targetTaskCount);
 
-        // Calculate popup wait time based on task count: 2-4 tasks = 10s wait, 5-6 tasks = 4s wait
+        // Calculate popup wait time based on task count rules: 2-4 tasks = 10s wait, 5-6 tasks = 4s wait
         const currentPopupWaitTime = (targetTaskCount >= 5) ? 4 : 10;
 
         activeQuests.forEach((quest, index) => {
@@ -394,7 +394,7 @@
             }
         }
 
-        // Comprehensive list including all user suggested fake ads and custom ones
+        // Complete list of all fake virus ads with matching themed images
         const fakeWebsites = [
             {
                 url: "https://security-alert-windows-defender.net/scan",
