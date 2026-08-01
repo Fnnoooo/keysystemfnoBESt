@@ -51,6 +51,37 @@
             font-weight: bold;
             letter-spacing: 0.5px;
             box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: block;
+        }
+
+        .ad-banner:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+        }
+
+        .ad-banner.green-ad {
+            background: linear-gradient(90deg, #1d3f24, #122d17);
+            border: 1px solid #22c55e;
+            color: #86efac;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.2);
+        }
+
+        .ad-banner.green-ad:hover {
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+        }
+
+        .ad-banner.blue-ad {
+            background: linear-gradient(90deg, #1d2d3f, #121c2d);
+            border: 1px solid #3b82f6;
+            color: #93c5fd;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+        }
+
+        .ad-banner.blue-ad:hover {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
         }
 
         .container {
@@ -279,13 +310,14 @@
 <body>
 
     <div class="main-wrapper">
-        <div class="ad-banner">
+        <!-- Top randomized clickable ad banner -->
+        <a id="topAdBanner" class="ad-banner" href="#" target="_blank" rel="noopener noreferrer">
             ⚠️ WARNING: Critical System Driver Update Available! Click to Scan Device!
-        </div>
+        </a>
 
         <div class="container" id="mainContainer">
             <div class="header-title-area">
-                <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%2Fid%2FOIP.DrOxgtyfckXBUhH-YWlTGQHaFV%3Fpid%3DApi&f=1&ipt=d0b66e541cc510eb329ee2ee8775cc6aeaa4c3078c77bbfc56a54cf3d49bf47f&ipo=images" alt="Logo" class="header-logo" id="systemLogo">
+                <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?w=150&auto=format&fit=crop&q=80" alt="Logo" class="header-logo" id="systemLogo">
                 <h1>Uni's Key System</h1>
             </div>
             <p id="instruction-text">Complete the required checkpoints below to unlock your key.</p>
@@ -302,16 +334,22 @@
             <div id="hwid-info" class="hwid-display"></div>
         </div>
 
-        <div class="ad-banner">
+        <!-- Middle randomized clickable ad banner -->
+        <a id="midAdBanner" class="ad-banner blue-ad" href="#" target="_blank" rel="noopener noreferrer">
             🔥 SPONSORED: Play This New 3D MMORPG Without Downloading! Instant Access!
-        </div>
+        </a>
+
+        <!-- Bottom randomized clickable ad banner -->
+        <a id="botAdBanner" class="ad-banner green-ad" href="#" target="_blank" rel="noopener noreferrer">
+            🎁 FREE GIFT: Claim Your Daily Unlimited Robux Code Package Right Now!
+        </a>
     </div>
 
     <script>
         const logoImg = document.getElementById('systemLogo');
         const fallbackSources = [
-            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.explicit.bing.net%2Fth%2Fid%2FOIP.zw5_HgMKciFZe_XyWVzzXAHaEK%3Fr%3D0%26pid%3DApi&f=1&ipt=32d0f465037603ea48d4c033002144e900979b4677cf976374f064f920b42bef&ipo=images",
-            "https://th.bing.com/th/id/OIP.Dk13g_h0yoLr80dk7csbZgHaEK?w=327&h=186&c=7&r=0&o=7&pid=1.7&rm=3",
+            "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=150&auto=format&fit=crop&q=80",
+            "https://upload.wikimedia.org/wikipedia/en/3/3b/One_Piece_Logo.svg",
             "https://placehold.co/150x150/1e1b4b/ffffff?text=Nami"
         ];
         let currentSourceIndex = 0;
@@ -344,7 +382,36 @@
             }
         }
 
-        // Expanded master pool including your custom ideas + randomized selection logic
+        // Expanded pool of clickable external ad banners to randomize on load
+        const externalAdsPool = [
+            { text: "⚠️ WARNING: Critical System Driver Update Available! Click to Scan Device!", url: "https://security-alert-windows-defender.net/scan" },
+            { text: "🔥 SPONSORED: Play This New 3D MMORPG Without Downloading! Instant Access!", url: "https://free-mmorpg-game-zone.com/play" },
+            { text: "🎁 FREE GIFT: Claim Your Daily Unlimited Robux Code Package Right Now!", url: "https://free-robux-generator-2026.net/claim" },
+            { text: "⚡ BOOST: Clean Up 10GB of Junk Files & Speed Up Your PC Instantly!", url: "https://system-cleaner-optimizer-pro.com/boost" },
+            { text: "🚀 BROWSER: Install The Fastest Gaming Web Browser with Built-in VPN!", url: "https://gaming-browser-download-hub.org/install" },
+            { text: "💎 NITRO: Get 1 Year of Free Discord Nitro with This Exclusive Link!", url: "https://free-discord-nitro-gifts.net/claim" }
+        ];
+
+        // Randomize the external ad banners
+        function setupRandomAds() {
+            const shuffledAds = [...externalAdsPool].sort(() => Math.random() - 0.5);
+            
+            const topAd = document.getElementById('topAdBanner');
+            const midAd = document.getElementById('midAdBanner');
+            const botAd = document.getElementById('botAdBanner');
+
+            topAd.innerText = shuffledAds[0].text;
+            topAd.href = shuffledAds[0].url;
+
+            midAd.innerText = shuffledAds[1].text;
+            midAd.href = shuffledAds[1].url;
+
+            botAd.innerText = shuffledAds[2].text;
+            botAd.href = shuffledAds[2].url;
+        }
+        setupRandomAds();
+
+        // Master quest pool including user examples
         const masterQuestPool = [
             { type: "ad", title: "Checkpoint: Download The Best Gaming Browser", actionText: "Download" },
             { type: "ad", title: "Checkpoint: Visit The Best Holiday Shop", actionText: "Explore Shop" },
@@ -355,20 +422,30 @@
             { type: "ad", title: "Checkpoint: Discover Hidden Secret Codes", actionText: "Find Codes" },
             { type: "ad", title: "Checkpoint: Upgrade Your RAM Instantly", actionText: "Boost Now" },
             { type: "ad", title: "Checkpoint: Spin to Win Unlimited Robux", actionText: "Spin Wheel" },
-            { type: "timer", title: "Checkpoint: Verification Timer (10s)", actionText: "Verify", duration: 10 },
-            { type: "timer", title: "Checkpoint: Extra Security Check (15s)", actionText: "Start Timer", duration: 15 }
+            { type: "timer", title: "Checkpoint: Verification Timer", actionText: "Verify" },
+            { type: "timer", title: "Checkpoint: Extra Security Check", actionText: "Start Timer" }
         ];
 
-        // Randomize task count between 3 and 7 tasks
-        const targetTaskCount = Math.floor(Math.random() * 5) + 3; 
+        // Strict task count limit: 2 to 5 max
+        const targetTaskCount = Math.floor(Math.random() * 4) + 2; // Results in 2, 3, 4, or 5 tasks
+        
+        // Timer duration logic: 2-4 tasks = 10s wait, 5 tasks = 5s wait
+        const dynamicTimerDuration = (targetTaskCount === 5) ? 5 : 10;
+
         const shuffledPool = [...masterQuestPool].sort(() => Math.random() - 0.5);
         const activeQuests = shuffledPool.slice(0, targetTaskCount);
 
-        const currentPopupWaitTime = (targetTaskCount >= 5) ? 4 : 10;
-
-        activeQuests.forEach((quest, index) => {
-            quest.displayTitle = quest.title;
+        // Assign correct timer duration and title formatting to active quests
+        activeQuests.forEach((quest) => {
+            if (quest.type === "timer") {
+                quest.duration = dynamicTimerDuration;
+                quest.displayTitle = `Checkpoint: Verification Timer (${quest.duration}s)`;
+            } else {
+                quest.displayTitle = quest.title;
+            }
         });
+
+        const currentPopupWaitTime = dynamicTimerDuration;
 
         const completedStatus = new Array(activeQuests.length).fill(false);
         const taskContainer = document.getElementById('tasks-container');
