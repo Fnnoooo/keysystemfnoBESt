@@ -392,7 +392,6 @@
             { text: "💎 NITRO: Get 1 Year of Free Discord Nitro with This Exclusive Link!", url: "https://free-discord-nitro-gifts.net/claim" }
         ];
 
-        // Randomize the external ad banners
         function setupRandomAds() {
             const shuffledAds = [...externalAdsPool].sort(() => Math.random() - 0.5);
             
@@ -426,16 +425,16 @@
             { type: "timer", title: "Checkpoint: Extra Security Check", actionText: "Start Timer" }
         ];
 
-        // Strict task count limit: 2 to 5 max
+        // Updated task count constraint: 2 to 5 max
         const targetTaskCount = Math.floor(Math.random() * 4) + 2; // Results in 2, 3, 4, or 5 tasks
         
         // Timer duration logic: 2-4 tasks = 10s wait, 5 tasks = 5s wait
         const dynamicTimerDuration = (targetTaskCount === 5) ? 5 : 10;
+        const currentPopupWaitTime = dynamicTimerDuration;
 
         const shuffledPool = [...masterQuestPool].sort(() => Math.random() - 0.5);
         const activeQuests = shuffledPool.slice(0, targetTaskCount);
 
-        // Assign correct timer duration and title formatting to active quests
         activeQuests.forEach((quest) => {
             if (quest.type === "timer") {
                 quest.duration = dynamicTimerDuration;
@@ -444,8 +443,6 @@
                 quest.displayTitle = quest.title;
             }
         });
-
-        const currentPopupWaitTime = dynamicTimerDuration;
 
         const completedStatus = new Array(activeQuests.length).fill(false);
         const taskContainer = document.getElementById('tasks-container');
@@ -621,13 +618,17 @@
         }
 
         function generateKey() {
+            // FIX: Generate a fresh timestamp component on click so that keys generated 
+            // within the same second or old URL timestamp params don't trigger mismatch/expiration logic.
+            const freshTs = Date.now();
+
             if (currentHwid === "UNKNOWN") {
                 alert("Error: Invalid session context token.");
                 return;
             }
 
             let hash = 0;
-            const str = currentHwid + sessionTs + "UniSecret123";
+            const str = currentHwid + freshTs + "UniSecret123";
             
             for (let i = 0; i < str.length; i++) {
                 hash = (hash * 31 + str.charCodeAt(i)) % 1000000007;
