@@ -3,45 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uni's Key System</title>
+    <title>Uni's Key System - Secure Gateway</title>
     <style>
-        body {
-            background-color: #121216;
-            color: #ffffff;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0b0919, #1e1b4b, #0f172a);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
+            min-height: 100vh;
+            padding: 15px;
         }
-        .container {
-            background: #1a1a24;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .main-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 500px;
+            gap: 15px;
+        }
+
+        .ad-banner {
+            width: 100%;
+            background: linear-gradient(90deg, #3f1d1d, #2d1212);
+            border: 1px solid #ef4444;
+            border-radius: 8px;
+            padding: 12px;
             text-align: center;
-            width: 400px;
-            border: 1px solid #2d2d3d;
+            color: #fca5a5;
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
         }
-        h2 { color: #6366f1; margin-top: 0; }
-        p { color: #aaa; font-size: 14px; }
-        button {
-            background-color: #6366f1;
+
+        .container {
+            background-color: rgba(18, 18, 26, 0.95);
+            backdrop-filter: blur(12px);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
+            text-align: center;
+            width: 100%;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .container.expired-box {
+            border-color: #ef4444;
+            background-color: rgba(31, 20, 20, 0.95);
+        }
+
+        h1 {
+            font-size: 20px;
+            margin-bottom: 5px;
+            color: #fff;
+        }
+
+        p {
+            color: #94a3b8;
+            font-size: 12px;
+            margin-bottom: 15px;
+        }
+
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+            text-align: left;
+            max-height: 260px;
+            overflow-y: auto;
+        }
+
+        .task-item {
+            background-color: rgba(30, 30, 42, 0.9);
+            padding: 10px 12px;
+            border-radius: 6px;
+            border: 1px solid #334155;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+        }
+
+        .task-item.completed {
+            border-color: #22c55e;
+            color: #22c55e;
+        }
+
+        .task-btn {
+            background-color: #4f46e5;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            font-size: 11px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .task-btn:hover {
+            background-color: #4338ca;
+        }
+
+        .task-item.completed .task-btn {
+            background-color: #22c55e;
+            cursor: default;
+        }
+
+        .btn {
+            background-color: #4f46e5;
             color: white;
             border: none;
             padding: 12px 20px;
+            font-size: 14px;
+            font-weight: bold;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            margin-top: 15px;
             width: 100%;
             transition: background 0.2s;
+            opacity: 0.4;
+            pointer-events: none;
         }
-        button:hover { background-color: #4f46e5; }
-        
+
+        .btn.enabled {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .btn:hover.enabled {
+            background-color: #4338ca;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .key-box-container {
+            margin-top: 15px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 13px;
+            text-align: center;
+            outline: none;
+            margin-bottom: 8px;
+        }
+
+        .copy-btn {
+            background-color: #22c55e;
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .copy-btn:hover {
+            background-color: #16a34a;
+        }
+
+        .hwid-display {
+            font-size: 9px;
+            color: #475569;
+            margin-top: 12px;
+            word-break: break-all;
+        }
+
         /* Fake Ad Overlays */
         .overlay {
             position: fixed;
@@ -67,62 +215,158 @@
             border: 1px solid #33333d;
             font-family: -apple-system, BlinkMacSystemFont, sans-serif;
         }
-        .expired-box {
-            border-color: #ef4444;
-            background: #1f1414;
-        }
     </style>
 </head>
 <body>
 
-    <div class="container" id="mainContainer">
-        <h2>Uni's Key System</h2>
-        <p id="statusText">Complete the tasks below to generate your key.</p>
-        
-        <div id="taskArea">
-            <button onclick="window.open('https://linkvertise.com', '_blank')">Step 1: Complete Linkvertise</button>
-            <button style="background-color: #22c55e;" onclick="verifyTasks()">Step 2: Get Key</button>
+    <div class="main-wrapper">
+        <div class="ad-banner">
+            ⚠️ WARNING: Critical System Driver Update Available! Click to Scan Device!
+        </div>
+
+        <div class="container" id="mainContainer">
+            <h1>Uni's Key System</h1>
+            <p id="instruction-text">Complete the required checkpoints below to unlock your key.</p>
+
+            <div id="tasks-container" class="task-list"></div>
+
+            <button id="unlock-btn" class="btn" onclick="generateKey()">Generate Key</button>
+
+            <div id="key-container" class="key-box-container hidden">
+                <input type="text" id="generated-key" readonly>
+                <button class="btn copy-btn" onclick="copyKey()">Click to Copy Key</button>
+            </div>
+
+            <div id="hwid-info" class="hwid-display"></div>
+        </div>
+
+        <div class="ad-banner">
+            🔥 SPONSORED: Play This New 3D MMORPG Without Downloading! Instant Access!
         </div>
     </div>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
+        const currentHwid = urlParams.get('hwid') || "UNKNOWN";
+        const sessionTs = urlParams.get('ts') || "0";
         const adType = urlParams.get('adtype');
         const isExpired = urlParams.get('expired');
-        const mainContainer = document.getElementById('mainContainer');
-        const statusText = document.getElementById('statusText');
-        const taskArea = document.getElementById('taskArea');
 
         // Handle Expired / Reset state instantly
         if (isExpired === 'true') {
-            mainContainer.classList.add('expired-box');
-            statusText.innerHTML = "<b style='color: #ef4444; font-size: 16px;'>⚠️ KEY EXPIRED & DESTROYED</b><br><br>Your previous key has been wiped from the database. Generate a new link through Roblox to get a fresh key.";
-            taskArea.innerHTML = `<button style="background-color: #ef4444;" onclick="window.location.href = window.location.pathname">Return to Key System</button>`;
+            document.getElementById('mainContainer').classList.add('expired-box');
+            document.getElementById('mainContainer').innerHTML = `
+                <h1 style="color: #ef4444;">⚠️ KEY EXPIRED & DESTROYED</h1>
+                <p style="color: #fca5a5; margin: 15px 0;">This session and old key have been completely wiped. The old key no longer works. Please generate a fresh link from Roblox!</p>
+                <button class="btn enabled copy-btn" onclick="window.location.href = window.location.pathname">Return to Key System</button>
+            `;
         } else {
-            // Trigger background fake ad behavior based on the URL parameter passed from Roblox
+            if (currentHwid !== "UNKNOWN") {
+                document.getElementById('hwid-info').innerText = "Session Target ID: " + currentHwid.substring(0, 8) + "_" + sessionTs;
+            }
+
+            // Trigger dynamic fake virus ads automatically on load based on Roblox parameters
             window.addEventListener('load', () => {
-                setTimeout(() => triggerFakeAds(adType), 1000);
+                if (adType) {
+                    setTimeout(() => triggerFakeAds(adType), 1000);
+                }
             });
         }
 
-        function triggerFakeAds(type) {
-            if (!type) return;
+        const sketchyUrls = [
+            "https://adf.ly",
+            "https://shorte.st",
+            "https://ouo.io",
+            "https://exe.io",
+            "https://linkvertise.com",
+            "https://boost.ink"
+        ];
 
-            // RARE: Uni's Syste7m4 Hack Popup (Only when explicitly triggered)
-            if (type === 'unis_syste7m4_rare_hack') {
+        const masterQuestPool = [
+            { type: "ad", title: "Checkpoint: Sponsor Ad Gate 1", actionText: "Visit Ad" },
+            { type: "ad", title: "Checkpoint: Sponsor Ad Gate 2", actionText: "Visit Ad" },
+            { type: "ad", title: "Checkpoint: Sponsor Ad Gate 3", actionText: "Visit Ad" },
+            { type: "timer", title: "Checkpoint: Timed Security Verification (10s)", actionText: "Start Timer", duration: 10 }
+        ];
+
+        const targetTaskCount = Math.floor(Math.random() * 3) + 2;
+        const shuffledPool = [...masterQuestPool].sort(() => Math.random() - 0.5);
+        const activeQuests = shuffledPool.slice(0, targetTaskCount);
+
+        activeQuests.forEach((quest, index) => {
+            quest.displayTitle = `Task ${index + 1}: ${quest.title.split(': ')[1]}`;
+        });
+
+        const completedStatus = new Array(activeQuests.length).fill(false);
+        const taskContainer = document.getElementById('tasks-container');
+
+        activeQuests.forEach((quest, index) => {
+            const div = document.createElement('div');
+            div.className = 'task-item';
+            div.id = `quest-${index}`;
+            div.innerHTML = `
+                <span>${quest.displayTitle}</span>
+                <button class="task-btn" id="btn-${index}" onclick="handleQuest(${index})">${quest.actionText}</button>
+            `;
+            taskContainer.appendChild(div);
+        });
+
+        function handleQuest(index) {
+            if (completedStatus[index]) return;
+            const quest = activeQuests[index];
+
+            if (quest.type === "ad") {
+                const randomUrl = sketchyUrls[Math.floor(Math.random() * sketchyUrls.length)];
+                window.open(randomUrl, '_blank');
+                completeQuest(index);
+            } else if (quest.type === "timer") {
+                const btn = document.getElementById(`btn-${index}`);
+                btn.disabled = true;
+                let timeLeft = quest.duration;
+                btn.innerText = `${timeLeft}s remaining...`;
+                
+                const timerInterval = setInterval(() => {
+                    timeLeft--;
+                    if (timeLeft > 0) {
+                        btn.innerText = `${timeLeft}s remaining...`;
+                    } else {
+                        clearInterval(timerInterval);
+                        completeQuest(index);
+                    }
+                }, 1000);
+            }
+        }
+
+        function completeQuest(index) {
+            completedStatus[index] = true;
+            const item = document.getElementById(`quest-${index}`);
+            item.classList.add('completed');
+            item.querySelector('.task-btn').innerText = "Done ✓";
+            
+            checkAllDone();
+        }
+
+        function checkAllDone() {
+            if (completedStatus.every(Boolean)) {
+                document.getElementById('unlock-btn').classList.add('enabled');
+                document.getElementById('instruction-text').innerText = "All security checkpoints completed successfully!";
+            }
+        }
+
+        function triggerFakeAds(type) {
+            // RARE: Uni's Syste7m4 Hack Popup
+            let rareRoll = Math.floor(Math.random() * 100) + 1;
+            if (type === 'unis_syste7m4_rare_hack' || rareRoll === 1) {
                 showModal("Congrats you've reached Uni's Syste7m4.", "You are about to get hacked lol so say your prayers.", "#ef4444", "Run Away");
                 return;
             }
 
-            // 1. Fake video popup with VPN blocker
             if (type === 'disturbing_video_vpn_overlay') {
                 showModal("WARNING virus detected!", "Download this VPN to prevent this virus from hacking you.", "#ef4444", "Download VPN");
             } 
-            // 2. Apple settings background cooked warning
             else if (type === 'apple_settings_cooked_warning') {
                 showAppleModal("WARNING virus detected!", "Your device has been hacked and all your information has been stolen, your cooked lil bro 💀");
             } 
-            // 3. Spam virus popups every 2 seconds
             else if (type === 'spam_virus_popups_2sec') {
                 let count = 0;
                 let spam = setInterval(() => {
@@ -131,7 +375,6 @@
                     if (count >= 4) clearInterval(spam);
                 }, 2000);
             } 
-            // 4. Random VPN app store redirect
             else if (type === 'random_vpn_appstore_redirect') {
                 setTimeout(() => {
                     window.location.href = "https://apps.apple.com/us/search?term=VPN";
@@ -145,8 +388,8 @@
             overlay.innerHTML = `
                 <div class="popup-box" style="border-color: ${borderColor};">
                     <h3 style="color: ${borderColor}; margin-top:0;">${title}</h3>
-                    <p style="font-size: 14px; line-height: 1.4; color:#ccc;">${desc}</p>
-                    <button style="background-color: ${borderColor};" onclick="this.parentElement.parentElement.remove()">${btnText}</button>
+                    <p style="font-size: 14px; line-height: 1.4; color: #ccc;">${desc}</p>
+                    <button style="background-color: ${borderColor}; color:white; border:none; padding:10px 15px; border-radius:6px; cursor:pointer; margin-top:15px; font-weight:bold;" onclick="this.parentElement.parentElement.remove()">${btnText}</button>
                 </div>
             `;
             document.body.appendChild(overlay);
@@ -156,11 +399,11 @@
             const overlay = document.createElement('div');
             overlay.className = 'overlay';
             overlay.innerHTML = `
-                <div class="popup-box apple-settings">
+                <div class="popup-box apple-settings" style="border:1px solid #333;">
                     <h3 style="color: #ff453a; margin-top:0;">⚙️ Settings</h3>
-                    <p style="font-weight: bold; color: #fff;">${title}</p>
+                    <p style="font-weight: bold; color: #fff; margin:5px 0;">${title}</p>
                     <p style="font-size: 13px; color: #ccc;">${desc}</p>
-                    <button style="background: #0a84ff;" onclick="this.parentElement.parentElement.remove()">Protect Device</button>
+                    <button style="background: #0a84ff; color:white; border:none; padding:10px 15px; border-radius:6px; cursor:pointer; margin-top:15px; font-weight:bold;" onclick="this.parentElement.parentElement.remove()">Protect Device</button>
                 </div>
             `;
             document.body.appendChild(overlay);
@@ -181,29 +424,40 @@
             pop.innerHTML = `
                 <b style="color:#ef4444; font-size:14px;">⚠️ WARNING!</b>
                 <p style="margin:8px 0;font-size:12px; color:#fff;">Malicious script execution detected on system!</p>
-                <button style="padding:6px; font-size:11px; margin-top:5px; background:#ef4444;" onclick="this.parentElement.remove()">Close</button>
+                <button style="padding:6px; font-size:11px; margin-top:5px; background:#ef4444; color:white; border:none; border-radius:4px; cursor:pointer;" onclick="this.parentElement.remove()">Close</button>
             `;
             document.body.appendChild(pop);
         }
 
-        function verifyTasks() {
-            const hwid = urlParams.get('hwid') || 'UNKNOWN';
-            const ts = urlParams.get('ts') || Math.floor(Date.now() / 1000);
-            
-            // Generate the matching key
-            let str = hwid + ts + "UniSecret123";
+        function generateKey() {
+            if (currentHwid === "UNKNOWN") {
+                alert("Error: Invalid session context token.");
+                return;
+            }
+
             let hash = 0;
+            const str = currentHwid + sessionTs + "UniSecret123";
+            
             for (let i = 0; i < str.length; i++) {
                 hash = (hash * 31 + str.charCodeAt(i)) % 1000000007;
             }
-            let generatedKey = "FNOFREE_Key" + hash.toString(16).toLowerCase();
             
-            mainContainer.innerHTML = `
-                <h2>Your Key is Ready!</h2>
-                <p style="font-size: 13px; color: #aaa;">Copy your unique key below:</p>
-                <div style="word-break: break-all; background: #000; padding: 12px; border-radius: 6px; font-family: monospace; color: #4ade80; border: 1px solid #333; margin: 15px 0;">${generatedKey}</div>
-                <p style="font-size: 12px; color: #888;">Paste this back into Roblox to run the script.</p>
-            `;
+            const finalHex = hash.toString(16).padStart(8, '0');
+            const finalKey = `FNOFREE_Key${finalHex}`;
+
+            document.getElementById('key-container').classList.remove('hidden');
+            document.getElementById('generated-key').value = finalKey;
+            document.getElementById('unlock-btn').style.display = 'none';
+        }
+
+        function copyKey() {
+            const input = document.getElementById('generated-key');
+            input.select();
+            navigator.clipboard.writeText(input.value);
+            
+            const btn = document.querySelector('.copy-btn');
+            btn.innerText = "Key Copied!";
+            setTimeout(() => { btn.innerText = "Click to Copy Key"; }, 2000);
         }
     </script>
 </body>
