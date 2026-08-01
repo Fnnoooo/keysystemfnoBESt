@@ -79,6 +79,7 @@
             object-fit: cover;
             border: 2px solid #6366f1;
             box-shadow: 0 0 10px rgba(99, 102, 241, 0.4);
+            background-color: #0f172a;
         }
 
         h1 {
@@ -129,6 +130,8 @@
             cursor: pointer;
             font-weight: bold;
             transition: background 0.2s;
+            white-space: nowrap;
+            margin-left: 8px;
         }
 
         .task-btn:hover {
@@ -282,7 +285,6 @@
 
         <div class="container" id="mainContainer">
             <div class="header-title-area">
-                <!-- Authentic official One Piece Nami swimsuit illustration source (Non-AI official art / Wikimedia / static asset) -->
                 <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%2Fid%2FOIP.DrOxgtyfckXBUhH-YWlTGQHaFV%3Fpid%3DApi&f=1&ipt=d0b66e541cc510eb329ee2ee8775cc6aeaa4c3078c77bbfc56a54cf3d49bf47f&ipo=images" alt="Logo" class="header-logo" id="systemLogo">
                 <h1>Uni's Key System</h1>
             </div>
@@ -306,10 +308,19 @@
     </div>
 
     <script>
-        // Fallback for official Nami artwork URL if needed
         const logoImg = document.getElementById('systemLogo');
+        const fallbackSources = [
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.explicit.bing.net%2Fth%2Fid%2FOIP.zw5_HgMKciFZe_XyWVzzXAHaEK%3Fr%3D0%26pid%3DApi&f=1&ipt=32d0f465037603ea48d4c033002144e900979b4677cf976374f064f920b42bef&ipo=images",
+            "https://th.bing.com/th/id/OIP.Dk13g_h0yoLr80dk7csbZgHaEK?w=327&h=186&c=7&r=0&o=7&pid=1.7&rm=3",
+            "https://placehold.co/150x150/1e1b4b/ffffff?text=Nami"
+        ];
+        let currentSourceIndex = 0;
+
         logoImg.onerror = function() {
-            this.src = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.explicit.bing.net%2Fth%2Fid%2FOIP.zw5_HgMKciFZe_XyWVzzXAHaEK%3Fr%3D0%26pid%3DApi&f=1&ipt=32d0f465037603ea48d4c033002144e900979b4677cf976374f064f920b42bef&ipo=images";
+            currentSourceIndex++;
+            if (currentSourceIndex < fallbackSources.length) {
+                this.src = fallbackSources[currentSourceIndex];
+            }
         };
 
         const urlParams = new URLSearchParams(window.location.search);
@@ -321,7 +332,7 @@
             document.getElementById('mainContainer').classList.add('expired-box');
             document.getElementById('mainContainer').innerHTML = `
                 <div class="header-title-area">
-                    <img src="https://th.bing.com/th/id/OIP.Dk13g_h0yoLr80dk7csbZgHaEK?w=327&h=186&c=7&r=0&o=7&pid=1.7&rm=3" alt="Logo" class="header-logo">
+                    <img src="${fallbackSources[0]}" alt="Logo" class="header-logo">
                     <h1 style="color: #ef4444;">⚠️ EXPIRED</h1>
                 </div>
                 <p style="color: #fca5a5; margin: 15px 0;">This session and old key have been completely wiped. The old key no longer works. Please generate a fresh link from Roblox!</p>
@@ -333,25 +344,30 @@
             }
         }
 
+        // Expanded master pool including your custom ideas + randomized selection logic
         const masterQuestPool = [
-            { type: "ad", title: "Checkpoint: Download The Best Gaming Browser", actionText: "Visit Ad" },
-            { type: "ad", title: "Checkpoint: Visit The Best Holiday Shop", actionText: "Visit Ad" },
-            { type: "ad", title: "Checkpoint: Read An Article", actionText: "Visit Ad" },
-            { type: "ad", title: "Checkpoint: Find The Meaning of Life", actionText: "Visit Ad" },
-            { type: "ad", title: "Checkpoint: Check Out This Free Roblox Website!", actionText: "Visit Ad" },
-            { type: "timer", title: "Checkpoint: Verification Timer (10s)", actionText: "Verify", duration: 10 }
+            { type: "ad", title: "Checkpoint: Download The Best Gaming Browser", actionText: "Download" },
+            { type: "ad", title: "Checkpoint: Visit The Best Holiday Shop", actionText: "Explore Shop" },
+            { type: "ad", title: "Checkpoint: Read An Article", actionText: "Read Article" },
+            { type: "ad", title: "Checkpoint: Find The Meaning of Life", actionText: "Discover" },
+            { type: "ad", title: "Checkpoint: Check Out This Free Roblox Website!", actionText: "Check It Out" },
+            { type: "ad", title: "Checkpoint: Claim Your Free Nitro Generator", actionText: "Claim Now" },
+            { type: "ad", title: "Checkpoint: Discover Hidden Secret Codes", actionText: "Find Codes" },
+            { type: "ad", title: "Checkpoint: Upgrade Your RAM Instantly", actionText: "Boost Now" },
+            { type: "ad", title: "Checkpoint: Spin to Win Unlimited Robux", actionText: "Spin Wheel" },
+            { type: "timer", title: "Checkpoint: Verification Timer (10s)", actionText: "Verify", duration: 10 },
+            { type: "timer", title: "Checkpoint: Extra Security Check (15s)", actionText: "Start Timer", duration: 15 }
         ];
 
-        // Randomized task count between 2 and 6 tasks
-        const targetTaskCount = Math.floor(Math.random() * 5) + 2; 
+        // Randomize task count between 3 and 7 tasks
+        const targetTaskCount = Math.floor(Math.random() * 5) + 3; 
         const shuffledPool = [...masterQuestPool].sort(() => Math.random() - 0.5);
         const activeQuests = shuffledPool.slice(0, targetTaskCount);
 
-        // Calculate popup wait time based on task count rules: 2-4 tasks = 10s wait, 5-6 tasks = 4s wait
         const currentPopupWaitTime = (targetTaskCount >= 5) ? 4 : 10;
 
         activeQuests.forEach((quest, index) => {
-            quest.displayTitle = `Task ${index + 1}: ${quest.title.split(': ')[1]}`;
+            quest.displayTitle = quest.title;
         });
 
         const completedStatus = new Array(activeQuests.length).fill(false);
@@ -380,12 +396,12 @@
                 const btn = document.getElementById(`btn-${index}`);
                 btn.disabled = true;
                 let timeLeft = quest.duration;
-                btn.innerText = `${timeLeft}s remaining...`;
+                btn.innerText = `${timeLeft}s...`;
                 
                 const timerInterval = setInterval(() => {
                     timeLeft--;
                     if (timeLeft > 0) {
-                        btn.innerText = `${timeLeft}s remaining...`;
+                        btn.innerText = `${timeLeft}s...`;
                     } else {
                         clearInterval(timerInterval);
                         completeQuest(index);
@@ -394,7 +410,6 @@
             }
         }
 
-        // Complete list of all fake virus ads with matching themed images
         const fakeWebsites = [
             {
                 url: "https://security-alert-windows-defender.net/scan",
@@ -431,179 +446,25 @@
                 `
             },
             {
-                url: "https://fnskinmalware.io/free-skins",
-                title: "DOWNLOAD FREE FORTNITE SKINS!",
-                buttonText: "https://fnskinmalware.",
-                img: "https://images.unsplash.com/photo-1589241062272-c0a000071dfa?w=300&auto=format&fit=crop&q=60",
-                content: `
-                    <img src="https://images.unsplash.com/photo-1589241062272-c0a000071dfa?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Fortnite Skins">
-                    <h2 style="color: #a855f7; margin-bottom: 8px;">DOWNLOAD FREE FORTNITE SKINS!</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">TO INSTALL FREE FORTNITE SKINS PLEASE GO TO THE FOLLOWING WEBSITE THEN CLICK "INSTALL SKINS"</p>
-                `
-            },
-            {
-                url: "https://firewall-protection-center.org/restore",
-                title: "Security Alert!",
-                buttonText: "Restore Firewall",
-                img: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=300&auto=format&fit=crop&q=60",
-                content: `
-                    <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Firewall Alert">
-                    <h2 style="color: #ef4444; margin-bottom: 8px;">Security Alert!</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Your firewall has been disabled by an unknown application. Install the security patch to restore protection.</p>
-                `
-            },
-            {
-                url: "https://password-vault-leak-check.net/secure",
-                title: "Password Leak Detected!",
-                buttonText: "Secure Passwords",
-                img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300&auto=format&fit=crop&q=60",
-                content: `
-                    <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Password Leak">
-                    <h2 style="color: #f59e0b; margin-bottom: 8px;">Password Leak Detected!</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">One or more of your saved passwords may have been exposed online. Install the security update immediately.</p>
-                `
-            },
-            {
-                url: "https://windows-system-repair-tool.org/fix",
-                title: "System Integrity Failure",
-                buttonText: "Repair Files",
+                url: "https://system-cleaner-optimizer-pro.com/boost",
+                title: "⚠️ High CPU Usage Warning!",
+                buttonText: "Clean & Accelerate",
                 img: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=300&auto=format&fit=crop&q=60",
                 content: `
-                    <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="System Failure">
-                    <h2 style="color: #ef4444; margin-bottom: 8px;">System Integrity Failure</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Critical Windows files appear to be corrupted. Repair tools are required to prevent further damage.</p>
+                    <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="CPU Warning">
+                    <h2 style="color: #ef4444; margin-bottom: 8px;">CRITICAL PERFORMANCE DROP</h2>
+                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Your background processes are consuming 98% memory. Immediate optimization required!</p>
                 `
             },
             {
-                url: "https://spyware-activity-monitor.net/scan",
-                title: "Spyware Activity Found!",
-                buttonText: "Scan Device",
-                img: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=300&auto=format&fit=crop&q=60",
+                url: "https://free-robux-generator-2026.net/claim",
+                title: "🎉 You Won a Free Reward!",
+                buttonText: "Claim Prize",
+                img: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=300&auto=format&fit=crop&q=60",
                 content: `
-                    <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Spyware">
-                    <h2 style="color: #f59e0b; margin-bottom: 8px;">Spyware Activity Found!</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Suspicious background activity has been detected. Install the recommended scanner to remove hidden spyware.</p>
-                `
-            },
-            {
-                url: "https://browser-hijack-fixer.net/restore",
-                title: "Browser Hijacked!",
-                buttonText: "Restore Browser",
-                img: "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=300&auto=format&fit=crop&q=60",
-                content: `
-                    <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Browser Hijacked">
-                    <h2 style="color: #a855f7; margin-bottom: 8px;">Browser Hijacked!</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Your default browser settings have been modified by an unknown source. Restore your secure configuration now.</p>
-                `
-            },
-            {
-                url: "https://unauthorized-access-guard.org/block",
-                title: "Unauthorized Access Detected!",
-                buttonText: "Enable Protection",
-                img: "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=300&auto=format&fit=crop&q=60",
-                content: `
-                    <img src="https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Access Alert">
-                    <h2 style="color: #ef4444; margin-bottom: 8px;">Unauthorized Access Detected!</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">A remote device recently attempted to access your computer. Install enhanced protection to block future attempts.</p>
-                `
-            },
-            {
-                url: "https://memory-corruption-repair.net/fix",
-                title: "Memory Corruption Detected!",
-                buttonText: "Repair Memory",
-                img: "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=300&auto=format&fit=crop&q=60",
-                content: `
-                    <img src="https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Memory Leak">
-                    <h2 style="color: #f59e0b; margin-bottom: 8px;">Memory Corruption Detected!</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Suspicious memory changes could indicate malicious software activity. Repair your memory allocation tables now.</p>
-                `
-            },
-            {
-                url: "https://ransomware-signature-removal.org/clean",
-                title: "Ransomware Signature Found!",
-                buttonText: "Remove Threat",
-                img: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=300&auto=format&fit=crop&q=60",
-                content: `
-                    <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Ransomware">
-                    <h2 style="color: #ef4444; margin-bottom: 8px;">Ransomware Signature Found!</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">A known ransomware signature has been identified on your system. Immediate removal is recommended.</p>
-                `
-            },
-            {
-                url: "https://device-security-license-renew.com/extend",
-                title: "Device Security Expired!",
-                buttonText: "Renew Now",
-                img: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=300&auto=format&fit=crop&q=60",
-                content: `
-                    <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Expired License">
-                    <h2 style="color: #eab308; margin-bottom: 8px;">Device Security Expired!</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Your system protection license has expired. Renew security to continue receiving protection.</p>
-                `
-            },
-            {
-                url: "https://malicious-download-scanner.org/verify",
-                title: "Malicious Download Detected!",
-                buttonText: "Scan Download",
-                img: "https://images.unsplash.com/photo-1589241062272-c0a000071dfa?w=300&auto=format&fit=crop&q=60",
-                content: `
-                    <img src="https://images.unsplash.com/photo-1589241062272-c0a000071dfa?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Bad Download">
-                    <h2 style="color: #ef4444; margin-bottom: 8px;">Malicious Download Detected!</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">A recently downloaded file appears suspicious. Scan it before opening.</p>
-                `
-            },
-            {
-                url: "https://data-breach-protection-hub.net/secure",
-                title: "Data Breach Warning!",
-                buttonText: "Protect Account",
-                img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300&auto=format&fit=crop&q=60",
-                content: `
-                    <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Data Breach">
-                    <h2 style="color: #f59e0b; margin-bottom: 8px;">Data Breach Warning!</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Your email address appears in a recent security breach. Secure your account immediately.</p>
-                `
-            },
-            {
-                url: "https://network-intrusion-shield.net/secure",
-                title: "Network Intrusion Alert!",
-                buttonText: "Secure Network",
-                img: "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=300&auto=format&fit=crop&q=60",
-                content: `
-                    <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Network Intrusion">
-                    <h2 style="color: #ef4444; margin-bottom: 8px;">Network Intrusion Alert!</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Suspicious network traffic has been detected from an unknown source. Strengthen your connection security now.</p>
-                `
-            },
-            {
-                url: "https://encrypted-file-recovery-system.com/verify",
-                title: "Encrypted Files Found!",
-                buttonText: "Verify Files",
-                img: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=300&auto=format&fit=crop&q=60",
-                content: `
-                    <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Encrypted Files">
-                    <h2 style="color: #a855f7; margin-bottom: 8px;">Encrypted Files Found!</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Several files appear to have been unexpectedly encrypted. Verify your device security immediately.</p>
-                `
-            },
-            {
-                url: "https://cpu-resource-optimizer.org/boost",
-                title: "CPU Usage Critical!",
-                buttonText: "Optimize System",
-                img: "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=300&auto=format&fit=crop&q=60",
-                content: `
-                    <img src="https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="High CPU">
-                    <h2 style="color: #eab308; margin-bottom: 8px;">CPU Usage Critical!</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Unusual processor activity suggests an unknown application is consuming system resources.</p>
-                `
-            },
-            {
-                url: "https://dll-injection-scanner.net/remove",
-                title: "DLL Injection Detected!",
-                buttonText: "Remove Injection",
-                img: "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=300&auto=format&fit=crop&q=60",
-                content: `
-                    <img src="https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="DLL Injection">
-                    <h2 style="color: #ef4444; margin-bottom: 8px;">DLL Injection Detected!</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Unauthorized code has been injected into a running process. Perform a security scan immediately.</p>
+                    <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Winner Popup">
+                    <h2 style="color: #22c55e; margin-bottom: 8px;">CONGRATULATIONS VISITOR!</h2>
+                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">You are our 1,000,000th visitor! Click below to claim your verified rewards package instantly.</p>
                 `
             }
         ];
@@ -635,7 +496,6 @@
             `;
             document.body.appendChild(overlay);
 
-            // Dynamic wait time countdown based on task count rules
             let countdown = currentPopupWaitTime;
             const btn = document.getElementById('closePopupBtn');
             const timerInterval = setInterval(() => {
