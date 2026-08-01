@@ -185,34 +185,65 @@
             word-break: break-all;
         }
 
-        /* Fake Website / Ad Modal Overlays */
-        .overlay {
+        /* Fake Virus Website Overlays */
+        .fake-website-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
+            background: #0b0b10;
+            z-index: 99999;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 9999;
+            padding: 20px;
+            font-family: Arial, sans-serif;
         }
-        .popup-box {
-            background: #1e1e28;
-            padding: 25px;
-            border-radius: 10px;
+        .fake-browser-frame {
+            width: 100%;
+            max-width: 650px;
+            background: #181824;
             border: 2px solid #ef4444;
-            width: 330px;
+            border-radius: 10px;
+            box-shadow: 0 0 50px rgba(239, 68, 68, 0.4);
+            overflow: hidden;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3);
         }
-        .apple-settings {
-            background: #000000;
-            color: #f5f5f7;
-            border: 1px solid #33333d;
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        .fake-browser-header {
+            background: #252536;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #33334d;
         }
-        .expired-box {
-            border-color: #ef4444 !important;
-            background-color: rgba(31, 20, 20, 0.95) !important;
+        .fake-dots {
+            display: flex;
+            gap: 6px;
+        }
+        .fake-dot {
+            width: 12px; height: 12px; border-radius: 50%;
+        }
+        .dot-red { background: #ef4444; }
+        .dot-yellow { background: #f59e0b; }
+        .dot-green { background: #22c55e; }
+        .fake-address-bar {
+            background: #111118;
+            color: #94a3b8;
+            font-size: 11px;
+            padding: 5px 15px;
+            border-radius: 4px;
+            margin-left: 15px;
+            flex-grow: 1;
+            text-align: left;
+            border: 1px solid #33334d;
+        }
+        .fake-content {
+            padding: 30px;
+        }
+        .apple-settings-page {
+            background: #000000 !important;
+            color: #f5f5f7 !important;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif !important;
+            text-align: left !important;
         }
     </style>
 </head>
@@ -248,10 +279,8 @@
         const urlParams = new URLSearchParams(window.location.search);
         const currentHwid = urlParams.get('hwid') || "UNKNOWN";
         const sessionTs = urlParams.get('ts') || "0";
-        const adType = urlParams.get('adtype');
         const isExpired = urlParams.get('expired');
 
-        // Handle Expired / Reset state instantly
         if (isExpired === 'true') {
             document.getElementById('mainContainer').classList.add('expired-box');
             document.getElementById('mainContainer').innerHTML = `
@@ -299,9 +328,10 @@
             const quest = activeQuests[index];
 
             if (quest.type === "ad") {
-                // Instead of external linkvertise/ouo, trigger our custom fake website popups locally!
-                triggerFakeWebsiteAd();
-                completeQuest(index);
+                // Open custom full-screen fake virus website simulation instead of linkvertise/ouo
+                openFakeVirusWebsite(() => {
+                    completeQuest(index);
+                });
             } else if (quest.type === "timer") {
                 const btn = document.getElementById(`btn-${index}`);
                 btn.disabled = true;
@@ -320,32 +350,77 @@
             }
         }
 
-        function triggerFakeWebsiteAd() {
-            // Choose one of the fake website ad types randomly or based on URL parameter
-            let type = adType;
-            if (!type) {
-                const types = ['disturbing_video_vpn_overlay', 'apple_settings_cooked_warning', 'spam_virus_popups_2sec', 'random_vpn_appstore_redirect', 'unis_syste7m4_rare_hack'];
-                type = types[Math.floor(Math.random() * types.length)];
+        // Fake virus website templates
+        const fakeWebsites = [
+            {
+                url: "https://security-alert-windows-defender.net/scan",
+                title: "⚠️ Windows Defender Critical Alert",
+                content: `
+                    <h2 style="color: #ef4444; margin-bottom: 10px;">SYSTEM COMPROMISED!</h2>
+                    <p style="color: #ccc; font-size: 13px; margin-bottom: 20px;">Trojan.Win32.Generic spyware detected stealing user browser sessions and crypto keys.</p>
+                    <div style="background: #111; border: 1px dashed #ef4444; padding: 15px; border-radius: 6px; margin-bottom: 20px; text-align: left; font-family: monospace; font-size: 11px; color: #f87171;">
+                        [!] Target IP: 192.168.1.104<br>
+                        [!] Malware Signature: Rootkit.Agent.X<br>
+                        [!] Status: Active Data Leakage
+                    </div>
+                    <button style="background: #ef4444; color:white; border:none; padding:12px 25px; border-radius:6px; font-weight:bold; cursor:pointer;" onclick="closeFakeWebsite()">QUARANTINE & CONTINUE</button>
+                `
+            },
+            {
+                url: "https://apple-icloud-security-settings.com/warning",
+                isApple: true,
+                title: "⚙️ Settings - Security Warning",
+                content: `
+                    <h3 style="color: #ff453a; margin-top:0;">Device Hacked 💀</h3>
+                    <p style="font-weight: bold; color: #fff; margin:10px 0;">Your device has been cooked lil bro and all photos/passwords were stolen.</p>
+                    <p style="font-size: 13px; color: #aaa; margin-bottom: 25px;">Install an approved VPN profile immediately to revoke unauthorized access tokens.</p>
+                    <button style="background: #0a84ff; color:white; border:none; padding:12px 25px; border-radius:6px; font-weight:bold; cursor:pointer;" onclick="closeFakeWebsite()">Protect Device & Return</button>
+                `
+            },
+            {
+                url: "https://free-robux-generator-unlimited-2026.org/verify",
+                title: "🔥 Uni's Syste7m4 Hack Gateway",
+                content: `
+                    <h2 style="color: #6366f1; margin-bottom: 10px;">Congrats you've reached Uni's Syste7m4.</h2>
+                    <p style="color: #ccc; font-size: 13px; margin-bottom: 25px;">You are about to get hacked lol so say your prayers right now.</p>
+                    <button style="background: #6366f1; color:white; border:none; padding:12px 25px; border-radius:6px; font-weight:bold; cursor:pointer;" onclick="closeFakeWebsite()">Run Away / Continue</button>
+                `
             }
+        ];
 
-            if (type === 'unis_syste7m4_rare_hack') {
-                showModal("Congrats you've reached Uni's Syste7m4.", "You are about to get hacked lol so say your prayers.", "#ef4444", "Run Away");
-            } else if (type === 'disturbing_video_vpn_overlay') {
-                showModal("WARNING virus detected!", "Download this VPN to prevent this virus from hacking you.", "#ef4444", "Download VPN");
-            } else if (type === 'apple_settings_cooked_warning') {
-                showAppleModal("WARNING virus detected!", "Your device has been hacked and all your information has been stolen, your cooked lil bro 💀");
-            } else if (type === 'spam_virus_popups_2sec') {
-                let count = 0;
-                let spam = setInterval(() => {
-                    spawnSpamPopup();
-                    count++;
-                    if (count >= 4) clearInterval(spam);
-                }, 2000);
-            } else if (type === 'random_vpn_appstore_redirect') {
-                showModal("VPN Required!", "Click below to open the App Store and install a secure VPN.", "#0a84ff", "Open App Store");
-                setTimeout(() => {
-                    window.location.href = "https://apps.apple.com/us/search?term=VPN";
-                }, 3000);
+        let currentCloseCallback = null;
+
+        function openFakeVirusWebsite(callback) {
+            currentCloseCallback = callback;
+            const site = fakeWebsites[Math.floor(Math.random() * fakeWebsites.length)];
+
+            const overlay = document.createElement('div');
+            overlay.id = 'fakeWebOverlay';
+            overlay.className = 'fake-website-overlay';
+            overlay.innerHTML = `
+                <div class="fake-browser-frame ${site.isApple ? 'apple-settings-page' : ''}">
+                    <div class="fake-browser-header">
+                        <div class="fake-dots">
+                            <div class="fake-dot dot-red"></div>
+                            <div class="fake-dot dot-yellow"></div>
+                            <div class="fake-dot dot-green"></div>
+                        </div>
+                        <div class="fake-address-bar">🔒 ${site.url}</div>
+                    </div>
+                    <div class="fake-content">
+                        ${site.content}
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+        }
+
+        function closeFakeWebsite() {
+            const overlay = document.getElementById('fakeWebOverlay');
+            if (overlay) overlay.remove();
+            if (currentCloseCallback) {
+                currentCloseCallback();
+                currentCloseCallback = null;
             }
         }
 
@@ -363,53 +438,6 @@
                 document.getElementById('unlock-btn').classList.add('enabled');
                 document.getElementById('instruction-text').innerText = "All security checkpoints completed successfully!";
             }
-        }
-
-        function showModal(title, desc, borderColor, btnText) {
-            const overlay = document.createElement('div');
-            overlay.className = 'overlay';
-            overlay.innerHTML = `
-                <div class="popup-box" style="border-color: ${borderColor};">
-                    <h3 style="color: ${borderColor}; margin-top:0;">${title}</h3>
-                    <p style="font-size: 14px; line-height: 1.4; color: #ccc;">${desc}</p>
-                    <button style="background-color: ${borderColor}; color:white; border:none; padding:10px 15px; border-radius:6px; cursor:pointer; margin-top:15px; font-weight:bold;" onclick="this.parentElement.parentElement.remove()">${btnText}</button>
-                </div>
-            `;
-            document.body.appendChild(overlay);
-        }
-
-        function showAppleModal(title, desc) {
-            const overlay = document.createElement('div');
-            overlay.className = 'overlay';
-            overlay.innerHTML = `
-                <div class="popup-box apple-settings" style="border:1px solid #333;">
-                    <h3 style="color: #ff453a; margin-top:0;">⚙️ Settings</h3>
-                    <p style="font-weight: bold; color: #fff; margin:5px 0;">${title}</p>
-                    <p style="font-size: 13px; color: #ccc;">${desc}</p>
-                    <button style="background: #0a84ff; color:white; border:none; padding:10px 15px; border-radius:6px; cursor:pointer; margin-top:15px; font-weight:bold;" onclick="this.parentElement.parentElement.remove()">Protect Device</button>
-                </div>
-            `;
-            document.body.appendChild(overlay);
-        }
-
-        function spawnSpamPopup() {
-            const pop = document.createElement('div');
-            pop.style.position = 'fixed';
-            pop.style.top = (Math.random() * 70 + 10) + '%';
-            pop.style.left = (Math.random() * 70 + 10) + '%';
-            pop.style.background = '#1e1e28';
-            pop.style.border = '2px solid #ef4444';
-            pop.style.padding = '15px';
-            pop.style.zIndex = '10000';
-            pop.style.borderRadius = '8px';
-            pop.style.width = '240px';
-            pop.style.boxShadow = '0 5px 15px rgba(0,0,0,0.5)';
-            pop.innerHTML = `
-                <b style="color:#ef4444; font-size:14px;">⚠️ WARNING!</b>
-                <p style="margin:8px 0;font-size:12px; color:#fff;">Malicious script execution detected on system!</p>
-                <button style="padding:6px; font-size:11px; margin-top:5px; background:#ef4444; color:white; border:none; border-radius:4px; cursor:pointer;" onclick="this.parentElement.remove()">Close</button>
-            `;
-            document.body.appendChild(pop);
         }
 
         function generateKey() {
