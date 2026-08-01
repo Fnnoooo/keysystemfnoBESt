@@ -51,37 +51,6 @@
             font-weight: bold;
             letter-spacing: 0.5px;
             box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
-            cursor: pointer;
-            text-decoration: none;
-            transition: transform 0.2s, box-shadow 0.2s;
-            display: block;
-        }
-
-        .ad-banner:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
-        }
-
-        .ad-banner.green-ad {
-            background: linear-gradient(90deg, #1d3f24, #122d17);
-            border: 1px solid #22c55e;
-            color: #86efac;
-            box-shadow: 0 0 10px rgba(34, 197, 94, 0.2);
-        }
-
-        .ad-banner.green-ad:hover {
-            box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
-        }
-
-        .ad-banner.blue-ad {
-            background: linear-gradient(90deg, #1d2d3f, #121c2d);
-            border: 1px solid #3b82f6;
-            color: #93c5fd;
-            box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
-        }
-
-        .ad-banner.blue-ad:hover {
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
         }
 
         .container {
@@ -310,10 +279,9 @@
 <body>
 
     <div class="main-wrapper">
-        <!-- Top randomized clickable ad banner -->
-        <a id="topAdBanner" class="ad-banner" href="#" target="_blank" rel="noopener noreferrer">
+        <div class="ad-banner">
             ⚠️ WARNING: Critical System Driver Update Available! Click to Scan Device!
-        </a>
+        </div>
 
         <div class="container" id="mainContainer">
             <div class="header-title-area">
@@ -334,15 +302,9 @@
             <div id="hwid-info" class="hwid-display"></div>
         </div>
 
-        <!-- Middle randomized clickable ad banner -->
-        <a id="midAdBanner" class="ad-banner blue-ad" href="#" target="_blank" rel="noopener noreferrer">
+        <div class="ad-banner">
             🔥 SPONSORED: Play This New 3D MMORPG Without Downloading! Instant Access!
-        </a>
-
-        <!-- Bottom randomized clickable ad banner -->
-        <a id="botAdBanner" class="ad-banner green-ad" href="#" target="_blank" rel="noopener noreferrer">
-            🎁 FREE GIFT: Claim Your Daily Unlimited Robux Code Package Right Now!
-        </a>
+        </div>
     </div>
 
     <script>
@@ -379,40 +341,10 @@
         } else {
             if (currentHwid !== "UNKNOWN") {
                 document.getElementById('hwid-info').innerText = "Session Target ID: " + currentHwid.substring(0, 8) + "_" + sessionTs;
-            } else {
-                document.getElementById('hwid-info').innerText = "⚠️ Test Mode: No HWID detected in URL";
             }
         }
 
-        // Expanded pool of clickable external ad banners to randomize on load
-        const externalAdsPool = [
-            { text: "⚠️ WARNING: Critical System Driver Update Available! Click to Scan Device!", url: "https://security-alert-windows-defender.net/scan" },
-            { text: "🔥 SPONSORED: Play This New 3D MMORPG Without Downloading! Instant Access!", url: "https://free-mmorpg-game-zone.com/play" },
-            { text: "🎁 FREE GIFT: Claim Your Daily Unlimited Robux Code Package Right Now!", url: "https://free-robux-generator-2026.net/claim" },
-            { text: "⚡ BOOST: Clean Up 10GB of Junk Files & Speed Up Your PC Instantly!", url: "https://system-cleaner-optimizer-pro.com/boost" },
-            { text: "🚀 BROWSER: Install The Fastest Gaming Web Browser with Built-in VPN!", url: "https://gaming-browser-download-hub.org/install" },
-            { text: "💎 NITRO: Get 1 Year of Free Discord Nitro with This Exclusive Link!", url: "https://free-discord-nitro-gifts.net/claim" }
-        ];
-
-        function setupRandomAds() {
-            const shuffledAds = [...externalAdsPool].sort(() => Math.random() - 0.5);
-            
-            const topAd = document.getElementById('topAdBanner');
-            const midAd = document.getElementById('midAdBanner');
-            const botAd = document.getElementById('botAdBanner');
-
-            topAd.innerText = shuffledAds[0].text;
-            topAd.href = shuffledAds[0].url;
-
-            midAd.innerText = shuffledAds[1].text;
-            midAd.href = shuffledAds[1].url;
-
-            botAd.innerText = shuffledAds[2].text;
-            botAd.href = shuffledAds[2].url;
-        }
-        setupRandomAds();
-
-        // Master quest pool including user examples
+        // Expanded master pool including your custom ideas + randomized selection logic
         const masterQuestPool = [
             { type: "ad", title: "Checkpoint: Download The Best Gaming Browser", actionText: "Download" },
             { type: "ad", title: "Checkpoint: Visit The Best Holiday Shop", actionText: "Explore Shop" },
@@ -423,27 +355,19 @@
             { type: "ad", title: "Checkpoint: Discover Hidden Secret Codes", actionText: "Find Codes" },
             { type: "ad", title: "Checkpoint: Upgrade Your RAM Instantly", actionText: "Boost Now" },
             { type: "ad", title: "Checkpoint: Spin to Win Unlimited Robux", actionText: "Spin Wheel" },
-            { type: "timer", title: "Checkpoint: Verification Timer", actionText: "Verify" },
-            { type: "timer", title: "Checkpoint: Extra Security Check", actionText: "Start Timer" }
+            { type: "timer", title: "Checkpoint: Verification Timer (10s)", actionText: "Verify", duration: 10 },
+            { type: "timer", title: "Checkpoint: Extra Security Check (15s)", actionText: "Start Timer", duration: 15 }
         ];
 
-        // Updated task count constraint: 2 to 5 max
-        const targetTaskCount = Math.floor(Math.random() * 4) + 2; 
-        
-        // Timer duration logic: 2-4 tasks = 10s wait, 5 tasks = 5s wait
-        const dynamicTimerDuration = (targetTaskCount === 5) ? 5 : 10;
-        const currentPopupWaitTime = dynamicTimerDuration;
-
+        // Randomize task count between 3 and 7 tasks
+        const targetTaskCount = Math.floor(Math.random() * 5) + 3; 
         const shuffledPool = [...masterQuestPool].sort(() => Math.random() - 0.5);
         const activeQuests = shuffledPool.slice(0, targetTaskCount);
 
-        activeQuests.forEach((quest) => {
-            if (quest.type === "timer") {
-                quest.duration = dynamicTimerDuration;
-                quest.displayTitle = `Checkpoint: Verification Timer (${quest.duration}s)`;
-            } else {
-                quest.displayTitle = quest.title;
-            }
+        const currentPopupWaitTime = (targetTaskCount >= 5) ? 4 : 10;
+
+        activeQuests.forEach((quest, index) => {
+            quest.displayTitle = quest.title;
         });
 
         const completedStatus = new Array(activeQuests.length).fill(false);
@@ -620,13 +544,13 @@
         }
 
         function generateKey() {
-            // FIX: Reverted to use 'sessionTs' from the URL so the hash matches the game's expectations perfectly.
-            // If you are testing this file locally (without a URL from the game), we provide safe fallbacks so it still works.
-            const hwidToUse = (currentHwid === "UNKNOWN") ? "TestHWID123" : currentHwid;
-            const tsToUse = (sessionTs === "0") ? "123456" : sessionTs;
+            if (currentHwid === "UNKNOWN") {
+                alert("Error: Invalid session context token.");
+                return;
+            }
 
             let hash = 0;
-            const str = hwidToUse + tsToUse + "UniSecret123";
+            const str = currentHwid + sessionTs + "UniSecret123";
             
             for (let i = 0; i < str.length; i++) {
                 hash = (hash * 31 + str.charCodeAt(i)) % 1000000007;
