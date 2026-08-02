@@ -22,6 +22,32 @@
             align-items: center;
             min-height: 100vh;
             padding: 15px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* New Animated Background Particles */
+        .bg-particles {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            display: block;
+            background: rgba(255, 255, 255, 0.03);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.1);
+            animation: floatUp 25s linear infinite;
+            bottom: -150px;
+            border-radius: 8px;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-1200px) rotate(720deg); opacity: 0; }
         }
 
         @keyframes gradientBG {
@@ -37,27 +63,44 @@
             width: 100%;
             max-width: 500px;
             gap: 15px;
+            z-index: 1; /* Keep above particles */
         }
 
         .ad-banner {
             width: 100%;
-            background: linear-gradient(90deg, #3f1d1d, #2d1212);
-            border: 1px solid #ef4444;
+            background: linear-gradient(90deg, #1e293b, #0f172a);
+            border: 1px solid #475569;
             border-radius: 8px;
-            padding: 12px;
-            text-align: center;
-            color: #fca5a5;
+            padding: 10px;
+            text-align: left;
+            color: #cbd5e1;
             font-size: 11px;
             font-weight: bold;
             letter-spacing: 0.5px;
-            box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
         .ad-banner:hover {
             transform: scale(1.02);
-            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+            border-color: #6366f1;
+        }
+
+        .ad-banner-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            object-fit: cover;
+            border: 1px solid #334155;
+        }
+
+        .ad-banner-text {
+            flex-grow: 1;
         }
 
         .container {
@@ -68,7 +111,7 @@
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
             text-align: center;
             width: 100%;
-            border: 1px solid rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(99, 102, 241, 0.2);
         }
 
         .header-title-area {
@@ -212,11 +255,12 @@
             word-break: break-all;
         }
 
-        /* Fake Virus Website Overlays */
+        /* Fake Browser Overlays */
         .fake-website-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: #0b0b10;
+            background: rgba(11, 11, 16, 0.9);
+            backdrop-filter: blur(5px);
             z-index: 99999;
             display: flex;
             flex-direction: column;
@@ -229,12 +273,19 @@
             width: 100%;
             max-width: 650px;
             background: #181824;
-            border: 2px solid #ef4444;
+            border: 1px solid #334155;
             border-radius: 10px;
-            box-shadow: 0 0 50px rgba(239, 68, 68, 0.4);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
             overflow: hidden;
             text-align: center;
+            animation: popIn 0.3s ease-out;
         }
+        
+        @keyframes popIn {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
         .fake-browser-header {
             background: #252536;
             padding: 10px 15px;
@@ -264,30 +315,40 @@
             border: 1px solid #33334d;
         }
         .fake-content {
-            padding: 25px;
+            padding: 30px;
         }
         .popup-img {
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             object-fit: cover;
-            border-radius: 8px;
+            border-radius: 12px;
             border: 2px solid rgba(255,255,255,0.1);
-            margin-bottom: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
-        .barely-visible-malware {
+        .sub-text {
             font-size: 9px;
-            color: rgba(255, 255, 255, 0.15);
-            letter-spacing: 0.5px;
-            margin-left: 4px;
+            color: rgba(255, 255, 255, 0.3);
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
 
+    <!-- Animated Particles -->
+    <div class="bg-particles">
+        <div class="particle" style="left: 10%; width: 80px; height: 80px; animation-duration: 18s;"></div>
+        <div class="particle" style="left: 30%; width: 40px; height: 40px; animation-duration: 22s; animation-delay: 2s;"></div>
+        <div class="particle" style="left: 70%; width: 120px; height: 120px; animation-duration: 25s; animation-delay: 4s;"></div>
+        <div class="particle" style="left: 85%; width: 60px; height: 60px; animation-duration: 19s; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 50%; width: 30px; height: 30px; animation-duration: 15s; animation-delay: 5s;"></div>
+    </div>
+
     <div class="main-wrapper">
+        <!-- Top Banner -->
         <div class="ad-banner" id="topBanner" onclick="openBannerAd(this)">
-            Loading Advertisement...
+            <img src="https://placehold.co/100x100/1e293b/ffffff?text=Ad" class="ad-banner-img" id="topBannerImg" alt="Ad">
+            <div class="ad-banner-text" id="topBannerText">Loading Advertisement...</div>
         </div>
 
         <div class="container" id="mainContainer">
@@ -309,8 +370,10 @@
             <div id="hwid-info" class="hwid-display"></div>
         </div>
 
+        <!-- Bottom Banner -->
         <div class="ad-banner" id="bottomBanner" onclick="openBannerAd(this)">
-            Loading Advertisement...
+            <img src="https://placehold.co/100x100/1e293b/ffffff?text=Ad" class="ad-banner-img" id="bottomBannerImg" alt="Ad">
+            <div class="ad-banner-text" id="bottomBannerText">Loading Advertisement...</div>
         </div>
     </div>
 
@@ -351,27 +414,27 @@
             }
         }
 
-        // Clickable Banners Logic
+        // Expanded Clickable Banners with Images
         const clickableBannerPool = [
-            { text: "⚠️ WARNING: Critical System Driver Update Available! Click to Scan Device!", url: "https://system-driver-update-tool.net" },
-            { text: "🔥 SPONSORED: Play This New 3D MMORPG Without Downloading! Instant Access!", url: "https://instant-mmo-gaming.com" },
-            { text: "💰 ELON MUSK IS DOUBLING BTC! Send 0.1 BTC to receive 0.2 BTC instantly!", url: "https://crypto-giveaway-event.org" },
-            { text: "🚨 ALERT: Your IP address is exposed! Hackers can see you. Click here to secure it!", url: "https://nord-vpn-secure-ip.net" },
-            { text: "💎 GENERATE 100,000 ROBUX: No human verification required! Click to start!", url: "https://free-robux-gen-2026.com" },
-            { text: "📱 APPLE REWARDS: You have been selected to win a free iPhone 15 Pro Max!", url: "https://apple-customer-rewards.org" },
-            { text: "💋 LOCAL DATING: Find verified singles in your area looking to chat tonight!", url: "https://local-singles-meetup.com" },
-            { text: "⚡ SLOW PC? Download PC Speed Optimizer 2026 to boost FPS by 300%!", url: "https://pc-speed-booster-pro.net" }
+            { text: "PLAY NOW: The ultimate 3D MMORPG is here! No downloads required.", url: "https://example.com/mmo", img: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=100&auto=format&fit=crop&q=60" },
+            { text: "DISCORD: Join 100,000+ players in our community server today!", url: "https://example.com/discord", img: "https://images.unsplash.com/photo-1614680376573-e34360e25fe2?w=100&auto=format&fit=crop&q=60" },
+            { text: "GAME DEALS: Get 90% off premium titles this weekend only!", url: "https://example.com/deals", img: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=100&auto=format&fit=crop&q=60" },
+            { text: "UPGRADE: Need better FPS? Check out the best gaming mice of 2026.", url: "https://example.com/hardware", img: "https://images.unsplash.com/photo-1527814050087-3793815479db?w=100&auto=format&fit=crop&q=60" },
+            { text: "GIVEAWAY: Enter to win a $500 digital gift card! Limited entries.", url: "https://example.com/giveaway", img: "https://images.unsplash.com/photo-1607082349566-187342175e2f?w=100&auto=format&fit=crop&q=60" },
+            { text: "NEW RELEASE: Explore the vast open world in 'Star Horizon'.", url: "https://example.com/game", img: "https://images.unsplash.com/photo-1614729939124-03290b56c9ce?w=100&auto=format&fit=crop&q=60" }
         ];
 
         function randomizeBanners() {
             const shuffledBanners = [...clickableBannerPool].sort(() => Math.random() - 0.5);
             
             const topBanner = document.getElementById('topBanner');
-            topBanner.innerText = shuffledBanners[0].text;
+            document.getElementById('topBannerText').innerText = shuffledBanners[0].text;
+            document.getElementById('topBannerImg').src = shuffledBanners[0].img;
             topBanner.dataset.url = shuffledBanners[0].url;
 
             const bottomBanner = document.getElementById('bottomBanner');
-            bottomBanner.innerText = shuffledBanners[1].text;
+            document.getElementById('bottomBannerText').innerText = shuffledBanners[1].text;
+            document.getElementById('bottomBannerImg').src = shuffledBanners[1].img;
             bottomBanner.dataset.url = shuffledBanners[1].url;
         }
 
@@ -383,28 +446,21 @@
 
         randomizeBanners();
 
-        // REDUCED TIMERS SO YOUR KEY DOESN'T EXPIRE!
         const masterQuestPool = [
-            { type: "ad", title: "Checkpoint: Download The Best Gaming Browser", actionText: "Download" },
-            { type: "ad", title: "Checkpoint: Visit The Best Holiday Shop", actionText: "Explore Shop" },
-            { type: "ad", title: "Checkpoint: Read An Article", actionText: "Read Article" },
-            { type: "ad", title: "Checkpoint: Find The Meaning of Life", actionText: "Discover" },
-            { type: "ad", title: "Checkpoint: Check Out This Free Roblox Website!", actionText: "Check It Out" },
-            { type: "ad", title: "Checkpoint: Claim Your Free Nitro Generator", actionText: "Claim Now" },
-            { type: "ad", title: "Checkpoint: Discover Hidden Secret Codes", actionText: "Find Codes" },
-            { type: "ad", title: "Checkpoint: Upgrade Your RAM Instantly", actionText: "Boost Now" },
-            { type: "ad", title: "Checkpoint: Spin to Win Unlimited Robux", actionText: "Spin Wheel" },
-            { type: "timer", title: "Checkpoint: Verification Timer (3s)", actionText: "Verify", duration: 3 },
-            { type: "timer", title: "Checkpoint: Extra Security Check (5s)", actionText: "Start Timer", duration: 5 }
+            { type: "ad", title: "Checkpoint: Discover the Best MMO", actionText: "Play Now" },
+            { type: "ad", title: "Checkpoint: Check out this Discord", actionText: "Join" },
+            { type: "ad", title: "Checkpoint: Claim Free Virtual Item", actionText: "Claim" },
+            { type: "ad", title: "Checkpoint: Support the Creators", actionText: "View Page" },
+            { type: "ad", title: "Checkpoint: Watch Game Trailer", actionText: "Watch" },
+            { type: "ad", title: "Checkpoint: Best Keyboard Deals", actionText: "Shop" },
+            { type: "ad", title: "Checkpoint: Read Developer Blog", actionText: "Read" },
+            { type: "timer", title: "Checkpoint: System Check (3s)", actionText: "Verify", duration: 3 },
+            { type: "timer", title: "Checkpoint: Link Generation (5s)", actionText: "Start", duration: 5 }
         ];
 
-        // Limits tasks to between 2 and 4 (prevents long wait times)
         const targetTaskCount = Math.floor(Math.random() * 3) + 2; 
         const shuffledPool = [...masterQuestPool].sort(() => Math.random() - 0.5);
         const activeQuests = shuffledPool.slice(0, targetTaskCount);
-
-        // Sets fake popup wait time strictly to 3 seconds max
-        const currentPopupWaitTime = 3;
 
         activeQuests.forEach((quest, index) => {
             quest.displayTitle = quest.title;
@@ -429,7 +485,7 @@
             const quest = activeQuests[index];
 
             if (quest.type === "ad") {
-                openFakeVirusWebsite(() => {
+                openFakeWebsite(() => {
                     completeQuest(index);
                 });
             } else if (quest.type === "timer") {
@@ -450,139 +506,98 @@
             }
         }
 
+        // Expanded Pool of Fake Sites
         const fakeWebsites = [
             {
-                url: "https://security-alert-windows-defender.net/scan",
-                title: "⚠️ Windows Defender Critical Alert",
-                buttonText: "QUARANTINE & CONTINUE",
-                img: "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=300&auto=format&fit=crop&q=60",
+                url: "https://discord-community-hub.com/invite",
+                title: "Join our Community!",
+                buttonText: "Accept Invite",
+                img: "https://images.unsplash.com/photo-1614680376573-e34360e25fe2?w=300&auto=format&fit=crop&q=60",
                 content: `
-                    <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Virus Threat">
-                    <h2 style="color: #ef4444; margin-bottom: 8px;">SYSTEM COMPROMISED!</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Trojan.Win32.Generic spyware detected stealing user browser sessions and passwords.</p>
+                    <h2 style="color: #6366f1; margin-bottom: 8px;">YOU'RE INVITED!</h2>
+                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Join 50,000 other gamers in the best Discord server. Get exclusive scripts and codes!</p>
                 `
             },
             {
-                url: "https://spyware-cleaner-pro-removal.net/download",
-                title: "Spyware detected!",
-                buttonText: "Download",
-                img: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=300&auto=format&fit=crop&q=60",
-                content: `
-                    <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Spyware Alert">
-                    <h2 style="color: #ef4444; margin-bottom: 8px;">Spyware detected!</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">We detected spyware on your device, to remove it download this zip file to for sure remove it forever.</p>
-                `
-            },
-            {
-                url: "https://roblox-security-scanner-hub.org/malware-found",
-                title: "Scan complete, virus detected!😂",
-                buttonText: "Install App",
-                hasMalwareSub: true,
-                img: "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=300&auto=format&fit=crop&q=60",
-                content: `
-                    <img src="https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Malware Found">
-                    <h2 style="color: #f59e0b; margin-bottom: 8px;">Scan complete, virus detected!😂</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">A file named "RobuxCryptoMine.5772aaekey" has been flagged as Malware. To remove it please install the following app.</p>
-                `
-            },
-            {
-                url: "https://system-cleaner-optimizer-pro.com/boost",
-                title: "⚠️ High CPU Usage Warning!",
-                buttonText: "Clean & Accelerate",
-                img: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=300&auto=format&fit=crop&q=60",
-                content: `
-                    <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="CPU Warning">
-                    <h2 style="color: #ef4444; margin-bottom: 8px;">CRITICAL PERFORMANCE DROP</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Your background processes are consuming 98% memory. Immediate optimization required!</p>
-                `
-            },
-            {
-                url: "https://free-robux-generator-2026.net/claim",
-                title: "🎉 You Won a Free Reward!",
-                buttonText: "Claim Prize",
-                img: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=300&auto=format&fit=crop&q=60",
-                content: `
-                    <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Winner Popup">
-                    <h2 style="color: #22c55e; margin-bottom: 8px;">CONGRATULATIONS VISITOR!</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">You are our 1,000,000th visitor! Click below to claim your verified rewards package instantly.</p>
-                `
-            },
-            // NEW FAKE ADS ADDED BELOW
-            {
-                url: "https://microsoft-support-locked-pc.com/call-now",
-                title: "🚨 YOUR COMPUTER HAS BEEN BLOCKED 🚨",
-                buttonText: "Contact Support",
-                img: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=300&auto=format&fit=crop&q=60",
-                content: `
-                    <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Locked Screen">
-                    <h2 style="color: #ef4444; margin-bottom: 8px;">WINDOWS BLOCKED</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Error #268D3. Please do not turn off your PC. Call Support immediately to prevent data loss!</p>
-                `
-            },
-            {
-                url: "https://vpn-secure-web-proxy.org/download",
-                title: "⚠️ Connection Not Secure",
-                buttonText: "Enable VPN",
-                img: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=300&auto=format&fit=crop&q=60",
-                content: `
-                    <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Server Hacking">
-                    <h2 style="color: #f59e0b; margin-bottom: 8px;">HACKERS ARE WATCHING</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Your ISP is exposing your location! Enable military-grade encryption to proceed safely.</p>
-                `
-            },
-            {
-                url: "https://crypto-miner-alert-registry.net/remove",
-                title: "Cryptojacking Script Blocked",
-                buttonText: "Remove Miner",
-                hasMalwareSub: true,
-                img: "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?w=300&auto=format&fit=crop&q=60",
-                content: `
-                    <img src="https://images.unsplash.com/photo-1621416894569-0f39ed31d247?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Bitcoin">
-                    <h2 style="color: #ef4444; margin-bottom: 8px;">MINING SCRIPT DETECTED</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">A website is using your GPU to mine Monero. Install removal tool to stop hardware degradation.</p>
-                `
-            },
-            {
-                url: "https://flash-player-update-now.com/install",
-                title: "Flash Player Out of Date",
-                buttonText: "Update Now",
-                img: "https://images.unsplash.com/photo-1547394765-185e1e68f34e?w=300&auto=format&fit=crop&q=60",
-                content: `
-                    <img src="https://images.unsplash.com/photo-1547394765-185e1e68f34e?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Outdated Software">
-                    <h2 style="color: #3b82f6; margin-bottom: 8px;">UPDATE REQUIRED</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Media elements on this page require the latest version of Adobe Flash Player.</p>
-                `
-            },
-            {
-                url: "https://amazon-survey-rewards-center.org/claim",
-                title: "🎁 Answer Survey to Win!",
-                buttonText: "Start Survey",
+                url: "https://daily-rewards-center.net/claim",
+                title: "🎁 Daily Reward Ready",
+                buttonText: "Claim to Inventory",
                 img: "https://images.unsplash.com/photo-1607082349566-187342175e2f?w=300&auto=format&fit=crop&q=60",
                 content: `
-                    <img src="https://images.unsplash.com/photo-1607082349566-187342175e2f?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Gift Card">
-                    <h2 style="color: #22c55e; margin-bottom: 8px;">$1000 AMAZON GIFT CARD</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Complete a quick 3-minute survey about your internet habits to claim your reward!</p>
+                    <h2 style="color: #22c55e; margin-bottom: 8px;">DAILY LOGIN BONUS</h2>
+                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">You have a pending reward chest waiting to be opened. Claim it before it expires!</p>
                 `
             },
             {
-                url: "https://browser-damaged-virus-alert.net/scan",
-                title: "Browser Severely Damaged by (4) Viruses!",
-                buttonText: "Repair Browser",
-                hasMalwareSub: true,
-                img: "https://images.unsplash.com/photo-1584433144859-1fc3ab64a957?w=300&auto=format&fit=crop&q=60",
+                url: "https://premium-upgrade-store.com/checkout",
+                title: "Upgrade to VIP Tier",
+                buttonText: "View Benefits",
+                img: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=300&auto=format&fit=crop&q=60",
                 content: `
-                    <img src="https://images.unsplash.com/photo-1584433144859-1fc3ab64a957?w=300&auto=format&fit=crop&q=60" class="popup-img" alt="Glitch Virus">
-                    <h2 style="color: #ef4444; margin-bottom: 8px;">CRITICAL BROWSER ERROR</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Your recent browsing has infected your system with 4 malicious Trojans. Immediate repair needed.</p>
+                    <h2 style="color: #f59e0b; margin-bottom: 8px;">TIRED OF WAITING?</h2>
+                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Bypass this entire key system forever by purchasing a lifetime VIP subscription.</p>
+                `
+            },
+            {
+                url: "https://virtual-pet-care.net/feed",
+                title: "🐾 Your Pet Needs You!",
+                buttonText: "Feed Pet",
+                img: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=300&auto=format&fit=crop&q=60",
+                content: `
+                    <h2 style="color: #ec4899; margin-bottom: 8px;">HUNGRY PET ALERT</h2>
+                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Your virtual companion's hunger bar is critically low. Please feed them immediately.</p>
+                `
+            },
+            {
+                url: "https://rpg-browser-game.org/play",
+                title: "Defeat the Dragon",
+                buttonText: "Start Quest",
+                img: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=300&auto=format&fit=crop&q=60",
+                content: `
+                    <h2 style="color: #ef4444; margin-bottom: 8px;">EPIC BOSS FIGHT</h2>
+                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">The realm is under attack. Gear up and join the raid to defeat the Obsidian Dragon!</p>
+                `
+            },
+            {
+                url: "https://esports-tournament-live.tv/stream",
+                title: "LIVE: Grand Finals",
+                buttonText: "Watch Stream",
+                img: "https://images.unsplash.com/photo-1540224871915-bc8ffb782bdf?w=300&auto=format&fit=crop&q=60",
+                content: `
+                    <h2 style="color: #8b5cf6; margin-bottom: 8px;">TOURNAMENT LIVE NOW</h2>
+                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Watch the top players compete for a $1,000,000 prize pool. Don't miss the action!</p>
+                `
+            },
+            {
+                url: "https://rate-our-app-portal.net/feedback",
+                title: "⭐ Rate Your Experience",
+                buttonText: "Submit 5 Stars",
+                img: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=300&auto=format&fit=crop&q=60",
+                content: `
+                    <h2 style="color: #eab308; margin-bottom: 8px;">WE VALUE YOUR FEEDBACK</h2>
+                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Enjoying the scripts? Please leave us a 5-star review on the official catalog page!</p>
+                `
+            },
+            {
+                url: "https://exclusive-beta-access.com/register",
+                title: "Closed Beta Registration",
+                buttonText: "Sign Up Now",
+                img: "https://images.unsplash.com/photo-1614729939124-03290b56c9ce?w=300&auto=format&fit=crop&q=60",
+                content: `
+                    <h2 style="color: #14b8a6; margin-bottom: 8px;">EARLY ACCESS GRANTED</h2>
+                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">You have been selected to test our new unreleased software. Spots are extremely limited.</p>
                 `
             }
         ];
 
         let currentCloseCallback = null;
 
-        function openFakeVirusWebsite(callback) {
+        function openFakeWebsite(callback) {
             currentCloseCallback = callback;
             const site = fakeWebsites[Math.floor(Math.random() * fakeWebsites.length)];
+
+            // Generate Random Timer between 5 and 10 seconds
+            let countdown = Math.floor(Math.random() * 6) + 5;
 
             const overlay = document.createElement('div');
             overlay.id = 'fakeWebOverlay';
@@ -598,30 +613,26 @@
                         <div class="fake-address-bar">🔒 ${site.url}</div>
                     </div>
                     <div class="fake-content">
+                        <img src="${site.img}" class="popup-img" alt="${site.title}">
                         ${site.content}
-                        <button id="closePopupBtn" style="background: #555; color:white; border:none; padding:12px 25px; border-radius:6px; font-weight:bold; cursor:not-allowed;" disabled>Please Wait (${currentPopupWaitTime}s)...${site.hasMalwareSub ? '<span class="barely-visible-malware">Install Malware</span>' : ''}</button>
+                        <button id="closePopupBtn" style="background: #334155; color:white; border:none; padding:12px 30px; border-radius:6px; font-weight:bold; cursor:not-allowed;" disabled>Please Wait (${countdown}s)...</button>
+                        <div class="sub-text">Advertisement</div>
                     </div>
                 </div>
             `;
             document.body.appendChild(overlay);
 
-            let countdown = currentPopupWaitTime;
             const btn = document.getElementById('closePopupBtn');
             const timerInterval = setInterval(() => {
                 countdown--;
                 if (countdown > 0) {
-                    const malwareSpan = btn.querySelector('.barely-visible-malware');
-                    const spanHtml = malwareSpan ? malwareSpan.outerHTML : '';
-                    btn.innerHTML = `Please Wait (${countdown}s)...` + spanHtml;
+                    btn.innerHTML = `Please Wait (${countdown}s)...`;
                 } else {
                     clearInterval(timerInterval);
                     btn.disabled = false;
                     btn.style.cursor = 'pointer';
                     btn.style.backgroundColor = '#6366f1';
-                    
-                    const malwareSpan = btn.querySelector('.barely-visible-malware');
-                    const spanHtml = malwareSpan ? malwareSpan.outerHTML : '';
-                    btn.innerHTML = site.buttonText + spanHtml;
+                    btn.innerHTML = site.buttonText;
                     btn.onclick = closeFakeWebsite;
                 }
             }, 1000);
@@ -648,7 +659,7 @@
         function checkAllDone() {
             if (completedStatus.every(Boolean)) {
                 document.getElementById('unlock-btn').classList.add('enabled');
-                document.getElementById('instruction-text').innerText = "All security checkpoints completed successfully!";
+                document.getElementById('instruction-text').innerText = "All checkpoints completed successfully!";
             }
         }
 
