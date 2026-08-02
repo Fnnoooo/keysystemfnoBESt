@@ -26,7 +26,7 @@
             overflow-x: hidden;
         }
 
-        /* New Animated Background Particles */
+        /* Animated Background Particles */
         .bg-particles {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -63,7 +63,7 @@
             width: 100%;
             max-width: 500px;
             gap: 15px;
-            z-index: 1; /* Keep above particles */
+            z-index: 1; 
         }
 
         .ad-banner {
@@ -150,7 +150,7 @@
             gap: 8px;
             margin-bottom: 20px;
             text-align: left;
-            max-height: 260px;
+            max-height: 280px;
             overflow-y: auto;
         }
 
@@ -184,12 +184,17 @@
             margin-left: 8px;
         }
 
-        .task-btn:hover {
+        .task-btn:disabled {
+            background-color: #475569;
+            cursor: not-allowed;
+        }
+
+        .task-btn:hover:not(:disabled) {
             background-color: #4338ca;
         }
 
         .task-item.completed .task-btn {
-            background-color: #22c55e;
+            background-color: #22c55e !important;
             cursor: default;
         }
 
@@ -255,7 +260,7 @@
             word-break: break-all;
         }
 
-        /* Fake Browser Overlays */
+        /* Fake Browser & Modal Overlays */
         .fake-website-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -269,6 +274,7 @@
             padding: 20px;
             font-family: Arial, sans-serif;
         }
+        
         .fake-browser-frame {
             width: 100%;
             max-width: 650px;
@@ -293,16 +299,16 @@
             align-items: center;
             border-bottom: 1px solid #33334d;
         }
+        
         .fake-dots {
             display: flex;
             gap: 6px;
         }
-        .fake-dot {
-            width: 12px; height: 12px; border-radius: 50%;
-        }
+        .fake-dot { width: 12px; height: 12px; border-radius: 50%; }
         .dot-red { background: #ef4444; }
         .dot-yellow { background: #f59e0b; }
         .dot-green { background: #22c55e; }
+        
         .fake-address-bar {
             background: #111118;
             color: #94a3b8;
@@ -314,9 +320,11 @@
             text-align: left;
             border: 1px solid #33334d;
         }
+        
         .fake-content {
             padding: 30px;
         }
+        
         .popup-img {
             width: 120px;
             height: 120px;
@@ -326,10 +334,51 @@
             margin-bottom: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
+        
         .sub-text {
             font-size: 9px;
             color: rgba(255, 255, 255, 0.3);
             margin-top: 10px;
+        }
+
+        /* CAPTCHA Specific Styles */
+        .captcha-display-box {
+            background: #cbd5e1;
+            color: #0f172a;
+            font-size: 28px;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            padding: 15px 30px;
+            letter-spacing: 6px;
+            text-decoration: line-through;
+            transform: skew(-10deg);
+            display: inline-block;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            user-select: none;
+            pointer-events: none;
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,0,0,0.15) 10px, rgba(0,0,0,0.15) 20px);
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        .captcha-input-field {
+            width: 80%;
+            max-width: 250px;
+            padding: 12px;
+            border: 2px solid #4f46e5;
+            border-radius: 6px;
+            background: #0f172a;
+            color: white;
+            font-size: 16px;
+            margin-bottom: 15px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+        
+        .captcha-input-field:focus {
+            border-color: #6366f1;
+            outline: none;
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.4);
         }
     </style>
 </head>
@@ -414,19 +463,16 @@
             }
         }
 
-        // Expanded Clickable Banners with Images
+        // Banners
         const clickableBannerPool = [
             { text: "PLAY NOW: The ultimate 3D MMORPG is here! No downloads required.", url: "https://example.com/mmo", img: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=100&auto=format&fit=crop&q=60" },
             { text: "DISCORD: Join 100,000+ players in our community server today!", url: "https://example.com/discord", img: "https://images.unsplash.com/photo-1614680376573-e34360e25fe2?w=100&auto=format&fit=crop&q=60" },
             { text: "GAME DEALS: Get 90% off premium titles this weekend only!", url: "https://example.com/deals", img: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=100&auto=format&fit=crop&q=60" },
-            { text: "UPGRADE: Need better FPS? Check out the best gaming mice of 2026.", url: "https://example.com/hardware", img: "https://images.unsplash.com/photo-1527814050087-3793815479db?w=100&auto=format&fit=crop&q=60" },
-            { text: "GIVEAWAY: Enter to win a $500 digital gift card! Limited entries.", url: "https://example.com/giveaway", img: "https://images.unsplash.com/photo-1607082349566-187342175e2f?w=100&auto=format&fit=crop&q=60" },
-            { text: "NEW RELEASE: Explore the vast open world in 'Star Horizon'.", url: "https://example.com/game", img: "https://images.unsplash.com/photo-1614729939124-03290b56c9ce?w=100&auto=format&fit=crop&q=60" }
+            { text: "UPGRADE: Need better FPS? Check out the best gaming mice of 2026.", url: "https://example.com/hardware", img: "https://images.unsplash.com/photo-1527814050087-3793815479db?w=100&auto=format&fit=crop&q=60" }
         ];
 
         function randomizeBanners() {
             const shuffledBanners = [...clickableBannerPool].sort(() => Math.random() - 0.5);
-            
             const topBanner = document.getElementById('topBanner');
             document.getElementById('topBannerText').innerText = shuffledBanners[0].text;
             document.getElementById('topBannerImg').src = shuffledBanners[0].img;
@@ -439,32 +485,36 @@
         }
 
         function openBannerAd(element) {
-            if (element.dataset.url) {
-                window.open(element.dataset.url, '_blank');
-            }
+            if (element.dataset.url) window.open(element.dataset.url, '_blank');
         }
 
         randomizeBanners();
 
+        // New Expanded Task Pool
         const masterQuestPool = [
+            // Fake Popups
             { type: "ad", title: "Checkpoint: Discover the Best MMO", actionText: "Play Now" },
-            { type: "ad", title: "Checkpoint: Check out this Discord", actionText: "Join" },
             { type: "ad", title: "Checkpoint: Claim Free Virtual Item", actionText: "Claim" },
-            { type: "ad", title: "Checkpoint: Support the Creators", actionText: "View Page" },
-            { type: "ad", title: "Checkpoint: Watch Game Trailer", actionText: "Watch" },
             { type: "ad", title: "Checkpoint: Best Keyboard Deals", actionText: "Shop" },
-            { type: "ad", title: "Checkpoint: Read Developer Blog", actionText: "Read" },
+            
+            // Timers
             { type: "timer", title: "Checkpoint: System Check (3s)", actionText: "Verify", duration: 3 },
-            { type: "timer", title: "Checkpoint: Link Generation (5s)", actionText: "Start", duration: 5 }
+            { type: "timer", title: "Checkpoint: Link Generation (5s)", actionText: "Start", duration: 5 },
+            
+            // Website Redirections
+            { type: "link", title: "Checkpoint: Visit Sponsor Website", actionText: "Visit", url: "https://example.com/sponsor" },
+            { type: "link", title: "Checkpoint: Read TOS & Guidelines", actionText: "Read", url: "https://example.com/tos" },
+            { type: "link", title: "Checkpoint: Follow us on Socials", actionText: "Follow", url: "https://example.com/social" },
+            
+            // CAPTCHA / Bot Checks
+            { type: "captcha", title: "Checkpoint: Human Verification", actionText: "Verify" },
+            { type: "captcha", title: "Checkpoint: Bot Protection System", actionText: "Start" }
         ];
 
-        const targetTaskCount = Math.floor(Math.random() * 3) + 2; 
+        // Randomly pick 3 to 5 tasks for the user
+        const targetTaskCount = Math.floor(Math.random() * 3) + 3; 
         const shuffledPool = [...masterQuestPool].sort(() => Math.random() - 0.5);
         const activeQuests = shuffledPool.slice(0, targetTaskCount);
-
-        activeQuests.forEach((quest, index) => {
-            quest.displayTitle = quest.title;
-        });
 
         const completedStatus = new Array(activeQuests.length).fill(false);
         const taskContainer = document.getElementById('tasks-container');
@@ -474,7 +524,7 @@
             div.className = 'task-item';
             div.id = `quest-${index}`;
             div.innerHTML = `
-                <span>${quest.displayTitle}</span>
+                <span>${quest.title}</span>
                 <button class="task-btn" id="btn-${index}" onclick="handleQuest(${index})">${quest.actionText}</button>
             `;
             taskContainer.appendChild(div);
@@ -483,17 +533,14 @@
         function handleQuest(index) {
             if (completedStatus[index]) return;
             const quest = activeQuests[index];
+            const btn = document.getElementById(`btn-${index}`);
 
             if (quest.type === "ad") {
-                openFakeWebsite(() => {
-                    completeQuest(index);
-                });
+                openFakeWebsite(() => { completeQuest(index); });
             } else if (quest.type === "timer") {
-                const btn = document.getElementById(`btn-${index}`);
                 btn.disabled = true;
                 let timeLeft = quest.duration;
                 btn.innerText = `${timeLeft}s...`;
-                
                 const timerInterval = setInterval(() => {
                     timeLeft--;
                     if (timeLeft > 0) {
@@ -503,91 +550,80 @@
                         completeQuest(index);
                     }
                 }, 1000);
+            } else if (quest.type === "link") {
+                window.open(quest.url, '_blank');
+                btn.innerText = "Checking...";
+                btn.disabled = true;
+                // Simulate a check delay to make it feel real
+                setTimeout(() => {
+                    completeQuest(index);
+                }, 3000);
+            } else if (quest.type === "captcha") {
+                openCaptchaModal(index);
             }
         }
 
-        // Expanded Pool of Fake Sites
-        const fakeWebsites = [
-            {
-                url: "https://discord-community-hub.com/invite",
-                title: "Join our Community!",
-                buttonText: "Accept Invite",
-                img: "https://images.unsplash.com/photo-1614680376573-e34360e25fe2?w=300&auto=format&fit=crop&q=60",
-                content: `
-                    <h2 style="color: #6366f1; margin-bottom: 8px;">YOU'RE INVITED!</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Join 50,000 other gamers in the best Discord server. Get exclusive scripts and codes!</p>
-                `
-            },
-            {
-                url: "https://daily-rewards-center.net/claim",
-                title: "🎁 Daily Reward Ready",
-                buttonText: "Claim to Inventory",
-                img: "https://images.unsplash.com/photo-1607082349566-187342175e2f?w=300&auto=format&fit=crop&q=60",
-                content: `
-                    <h2 style="color: #22c55e; margin-bottom: 8px;">DAILY LOGIN BONUS</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">You have a pending reward chest waiting to be opened. Claim it before it expires!</p>
-                `
-            },
-            {
-                url: "https://premium-upgrade-store.com/checkout",
-                title: "Upgrade to VIP Tier",
-                buttonText: "View Benefits",
-                img: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=300&auto=format&fit=crop&q=60",
-                content: `
-                    <h2 style="color: #f59e0b; margin-bottom: 8px;">TIRED OF WAITING?</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Bypass this entire key system forever by purchasing a lifetime VIP subscription.</p>
-                `
-            },
-            {
-                url: "https://virtual-pet-care.net/feed",
-                title: "🐾 Your Pet Needs You!",
-                buttonText: "Feed Pet",
-                img: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=300&auto=format&fit=crop&q=60",
-                content: `
-                    <h2 style="color: #ec4899; margin-bottom: 8px;">HUNGRY PET ALERT</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Your virtual companion's hunger bar is critically low. Please feed them immediately.</p>
-                `
-            },
-            {
-                url: "https://rpg-browser-game.org/play",
-                title: "Defeat the Dragon",
-                buttonText: "Start Quest",
-                img: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=300&auto=format&fit=crop&q=60",
-                content: `
-                    <h2 style="color: #ef4444; margin-bottom: 8px;">EPIC BOSS FIGHT</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">The realm is under attack. Gear up and join the raid to defeat the Obsidian Dragon!</p>
-                `
-            },
-            {
-                url: "https://esports-tournament-live.tv/stream",
-                title: "LIVE: Grand Finals",
-                buttonText: "Watch Stream",
-                img: "https://images.unsplash.com/photo-1540224871915-bc8ffb782bdf?w=300&auto=format&fit=crop&q=60",
-                content: `
-                    <h2 style="color: #8b5cf6; margin-bottom: 8px;">TOURNAMENT LIVE NOW</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Watch the top players compete for a $1,000,000 prize pool. Don't miss the action!</p>
-                `
-            },
-            {
-                url: "https://rate-our-app-portal.net/feedback",
-                title: "⭐ Rate Your Experience",
-                buttonText: "Submit 5 Stars",
-                img: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=300&auto=format&fit=crop&q=60",
-                content: `
-                    <h2 style="color: #eab308; margin-bottom: 8px;">WE VALUE YOUR FEEDBACK</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">Enjoying the scripts? Please leave us a 5-star review on the official catalog page!</p>
-                `
-            },
-            {
-                url: "https://exclusive-beta-access.com/register",
-                title: "Closed Beta Registration",
-                buttonText: "Sign Up Now",
-                img: "https://images.unsplash.com/photo-1614729939124-03290b56c9ce?w=300&auto=format&fit=crop&q=60",
-                content: `
-                    <h2 style="color: #14b8a6; margin-bottom: 8px;">EARLY ACCESS GRANTED</h2>
-                    <p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">You have been selected to test our new unreleased software. Spots are extremely limited.</p>
-                `
+        /* --- Website Redirects & CAPTCHA System --- */
+
+        function generateCaptchaCode() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let code = '';
+            for(let i = 0; i < 6; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
             }
+            return code;
+        }
+
+        function openCaptchaModal(index) {
+            const currentCode = generateCaptchaCode();
+            
+            const overlay = document.createElement('div');
+            overlay.id = 'captchaOverlay';
+            overlay.className = 'fake-website-overlay'; 
+            overlay.innerHTML = `
+                <div class="fake-browser-frame" style="max-width: 400px; padding: 35px 25px; background: #181824;">
+                    <h3 style="margin-bottom: 10px; color: #fff; font-size: 22px;">Bot Verification</h3>
+                    <p style="font-size: 13px; color: #94a3b8; margin-bottom: 25px;">Please type the randomized text you see in the box below to prove you are human.</p>
+                    
+                    <div class="captcha-display-box">${currentCode}</div><br>
+                    
+                    <input type="text" id="captchaInput" class="captcha-input-field" placeholder="Enter Code" autocomplete="off" maxlength="6">
+                    <br>
+                    <button id="verifyCaptchaBtn" style="background: #4f46e5; color:white; border:none; padding:12px 35px; border-radius:6px; font-size: 15px; font-weight:bold; cursor:pointer; transition: background 0.2s;">Verify Human</button>
+                    
+                    <p id="captchaError" style="color: #ef4444; font-size: 13px; margin-top: 15px; display: none; font-weight: bold;">❌ Incorrect code. Please try again.</p>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+
+            document.getElementById('captchaInput').focus();
+
+            document.getElementById('verifyCaptchaBtn').onclick = () => {
+                const inputVal = document.getElementById('captchaInput').value.trim().toUpperCase();
+                if (inputVal === currentCode) {
+                    document.getElementById('captchaOverlay').remove();
+                    completeQuest(index);
+                } else {
+                    const errorMsg = document.getElementById('captchaError');
+                    errorMsg.style.display = 'block';
+                    document.getElementById('captchaInput').value = '';
+                    
+                    // Shake effect on wrong password
+                    const box = document.querySelector('.fake-browser-frame');
+                    box.style.transform = 'translateX(-10px)';
+                    setTimeout(() => box.style.transform = 'translateX(10px)', 50);
+                    setTimeout(() => box.style.transform = 'translateX(-10px)', 100);
+                    setTimeout(() => box.style.transform = 'translateX(10px)', 150);
+                    setTimeout(() => box.style.transform = 'translateX(0)', 200);
+                }
+            };
+        }
+
+        /* --- Fake Ad Popups --- */
+
+        const fakeWebsites = [
+            { url: "https://daily-rewards-center.net/claim", title: "🎁 Daily Reward Ready", buttonText: "Claim to Inventory", img: "https://images.unsplash.com/photo-1607082349566-187342175e2f?w=300&auto=format&fit=crop&q=60", content: `<h2 style="color: #22c55e; margin-bottom: 8px;">DAILY LOGIN BONUS</h2><p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">You have a pending reward chest waiting to be opened.</p>` },
+            { url: "https://rpg-browser-game.org/play", title: "Defeat the Dragon", buttonText: "Start Quest", img: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=300&auto=format&fit=crop&q=60", content: `<h2 style="color: #ef4444; margin-bottom: 8px;">EPIC BOSS FIGHT</h2><p style="color: #ccc; font-size: 13px; margin-bottom: 15px;">The realm is under attack. Gear up and join the raid!</p>` }
         ];
 
         let currentCloseCallback = null;
@@ -595,9 +631,7 @@
         function openFakeWebsite(callback) {
             currentCloseCallback = callback;
             const site = fakeWebsites[Math.floor(Math.random() * fakeWebsites.length)];
-
-            // Generate Random Timer between 5 and 10 seconds
-            let countdown = Math.floor(Math.random() * 6) + 5;
+            let countdown = Math.floor(Math.random() * 6) + 5; // 5 to 10 seconds
 
             const overlay = document.createElement('div');
             overlay.id = 'fakeWebOverlay';
@@ -647,11 +681,15 @@
             }
         }
 
+        /* --- Completion Logic --- */
+
         function completeQuest(index) {
             completedStatus[index] = true;
             const item = document.getElementById(`quest-${index}`);
             item.classList.add('completed');
-            item.querySelector('.task-btn').innerText = "Done ✓";
+            const btn = item.querySelector('.task-btn');
+            btn.innerText = "Done ✓";
+            btn.disabled = true;
             
             checkAllDone();
         }
@@ -671,7 +709,6 @@
 
             let hash = 0;
             const str = currentHwid + sessionTs + "UniSecret123";
-            
             for (let i = 0; i < str.length; i++) {
                 hash = (hash * 31 + str.charCodeAt(i)) % 1000000007;
             }
